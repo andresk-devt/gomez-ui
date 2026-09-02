@@ -1,6 +1,6 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `ThemeSwitcher`; en camino: `Sidebar`, `Dialog`, `Menu`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `Dialog`, `Dropdown`, `ThemeSwitcher`; en camino: `Sidebar`, `Tabs`, `Toast`, …
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton>, <GmzInput>, <GmzSelect>, <GmzRadioGroup>, <GmzBadge>, <GmzAvatar>, <GmzTooltip>…
+// <GmzButton>, <GmzInput>, <GmzSelect>, <GmzDialog>, <GmzDropdown>, <GmzTooltip>…
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -467,6 +467,96 @@ dependencias). El trigger debe ser un elemento enfocable para el acceso por tecl
 | --------- | ------------------------------------------------ |
 | `default` | El elemento que activa el tooltip.               |
 | `content` | Contenido del tooltip (alternativa a `content`). |
+
+## `Dialog`
+
+Modal accesible: `role="dialog"`, `aria-modal`, foco atrapado dentro del panel, foco
+devuelto al cerrar, bloqueo del scroll del `body` y `Teleport` al `<body>`. Controlado con
+`v-model`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Dialog } from 'gomez-ui'
+
+const open = ref(false)
+</script>
+
+<template>
+  <Button @click="open = true">Abrir</Button>
+  <Dialog v-model="open" title="¿Borrar?" description="No se puede deshacer.">
+    <p>Contenido del diálogo.</p>
+    <template #footer="{ close }">
+      <Button variant="ghost" @click="close">Cancelar</Button>
+      <Button variant="danger" @click="close">Borrar</Button>
+    </template>
+  </Dialog>
+</template>
+```
+
+| Prop             | Tipo                             | Default | Descripción                                        |
+| ---------------- | -------------------------------- | ------- | -------------------------------------------------- |
+| `modelValue`     | `boolean`                        | `false` | Estado abierto (`v-model`).                        |
+| `title`          | `string`                         | —       | Título; se usa como `aria-labelledby`.             |
+| `description`    | `string`                         | —       | Descripción corta; se usa como `aria-describedby`. |
+| `size`           | `'sm' \| 'md' \| 'lg' \| 'full'` | `'md'`  | Ancho del panel.                                   |
+| `closable`       | `boolean`                        | `true`  | Botón de cerrar + cierre por overlay/Escape.       |
+| `closeOnOverlay` | `boolean`                        | `true`  | Cerrar al hacer clic en el overlay.                |
+| `closeOnEsc`     | `boolean`                        | `true`  | Cerrar al pulsar Escape.                           |
+
+| Evento              | Payload   | Descripción                   |
+| ------------------- | --------- | ----------------------------- |
+| `update:modelValue` | `boolean` | Al solicitar apertura/cierre. |
+| `open`              | —         | Tras abrirse.                 |
+| `close`             | —         | Tras cerrarse.                |
+
+| Slot      | Props       | Descripción                        |
+| --------- | ----------- | ---------------------------------- |
+| `default` | —           | Cuerpo del diálogo.                |
+| `header`  | —           | Sustituye al título.               |
+| `footer`  | `{ close }` | Pie de acciones; recibe `close()`. |
+
+## `Dropdown`
+
+Menú accesible: `role="menu"` / `menuitem`, navegación con ↑/↓/Home/End, `Enter`/`Espacio`
+para activar, `Escape` y clic fuera para cerrar, foco devuelto al trigger. Puede recibir
+`items` o componer el slot por defecto.
+
+```vue
+<template>
+  <Dropdown
+    :items="[
+      { label: 'Editar', value: 'edit' },
+      { divider: true },
+      { label: 'Borrar', value: 'del', danger: true },
+    ]"
+    @select="onSelect"
+  >
+    <template #trigger="{ toggle, open }">
+      <Button @click="toggle">Acciones {{ open ? '▲' : '▼' }}</Button>
+    </template>
+  </Dropdown>
+</template>
+```
+
+| Prop            | Tipo                                                         | Default          | Descripción               |
+| --------------- | ------------------------------------------------------------ | ---------------- | ------------------------- |
+| `items`         | `(DropdownItem \| { divider: true })[]`                      | `[]`             | Items del menú.           |
+| `placement`     | `'bottom-start' \| 'bottom-end' \| 'top-start' \| 'top-end'` | `'bottom-start'` | Posición del menú.        |
+| `disabled`      | `boolean`                                                    | `false`          | Deshabilita el trigger.   |
+| `closeOnSelect` | `boolean`                                                    | `true`           | Cerrar al elegir un item. |
+
+`DropdownItem`: `{ label: string; value?: string | number; disabled?: boolean; danger?: boolean }`.
+
+| Evento        | Payload                           | Descripción                   |
+| ------------- | --------------------------------- | ----------------------------- |
+| `select`      | `(value: string \| number, item)` | Al elegir un item habilitado. |
+| `update:open` | `boolean`                         | Al abrir/cerrar el menú.      |
+
+| Slot      | Props              | Descripción                                          |
+| --------- | ------------------ | ---------------------------------------------------- |
+| `trigger` | `{ open, toggle }` | Elemento que abre el menú (por defecto un `Button`). |
+| `default` | `{ close }`        | Contenido extra del menú tras los `items`.           |
 
 ## `ThemeSwitcher`
 

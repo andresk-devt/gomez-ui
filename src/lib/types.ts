@@ -309,3 +309,54 @@ export interface TooltipProps {
   /** Retardo en ms antes de mostrarlo. */
   openDelay?: number
 }
+
+export type DialogSize = 'sm' | 'md' | 'lg' | 'full'
+
+export interface DialogProps {
+  /** Estado abierto (`v-model`). */
+  modelValue?: boolean
+  /** Título del diálogo (usado como `aria-labelledby`). */
+  title?: string
+  /** Descripción corta bajo el título (usada como `aria-describedby`). */
+  description?: string
+  /** Ancho del panel. */
+  size?: DialogSize
+  /** Muestra el botón de cerrar y habilita el cierre por overlay/Escape. */
+  closable?: boolean
+  /** Cerrar al hacer clic en el overlay. */
+  closeOnOverlay?: boolean
+  /** Cerrar al pulsar Escape. */
+  closeOnEsc?: boolean
+}
+
+export interface DropdownItemObject {
+  /** Texto visible del item. */
+  label: string
+  /** Valor emitido al elegirlo; por defecto el `label`. */
+  value?: string | number
+  /** Deshabilita el item. */
+  disabled?: boolean
+  /** Estilo destructivo. */
+  danger?: boolean
+}
+
+export interface DropdownDivider {
+  /** Marca una línea separadora en el menú. */
+  divider: true
+}
+
+export type DropdownItem = DropdownItemObject | DropdownDivider
+
+export type DropdownPlacement =
+  'bottom-start' | 'bottom-end' | 'top-start' | 'top-end'
+
+export interface DropdownProps {
+  /** Items del menú (alternativa a componer el slot por defecto). */
+  items?: DropdownItem[]
+  /** Posición del menú respecto al trigger. */
+  placement?: DropdownPlacement
+  /** Deshabilita el trigger. */
+  disabled?: boolean
+  /** Cerrar el menú al elegir un item. */
+  closeOnSelect?: boolean
+}

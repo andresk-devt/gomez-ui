@@ -15,6 +15,8 @@ import { Badge } from './components/Badge'
 import { Avatar } from './components/Avatar'
 import { Spinner } from './components/Spinner'
 import { Tooltip } from './components/Tooltip'
+import { Dialog } from './components/Dialog'
+import { Dropdown } from './components/Dropdown'
 
 export {
   Button,
@@ -33,6 +35,8 @@ export {
   Avatar,
   Spinner,
   Tooltip,
+  Dialog,
+  Dropdown,
 }
 export { useColorMode } from './composables/useColorMode'
 export type { ColorMode, ResolvedColorMode } from './composables/useColorMode'
@@ -73,6 +77,13 @@ export type {
   SpinnerColor,
   TooltipProps,
   TooltipPlacement,
+  DialogProps,
+  DialogSize,
+  DropdownProps,
+  DropdownItem,
+  DropdownItemObject,
+  DropdownDivider,
+  DropdownPlacement,
 } from './types'
 
 export interface GomezUIOptions {
@@ -103,6 +114,8 @@ const GomezUI: Plugin<[GomezUIOptions?]> = {
     app.component(`${prefix}Avatar`, Avatar)
     app.component(`${prefix}Spinner`, Spinner)
     app.component(`${prefix}Tooltip`, Tooltip)
+    app.component(`${prefix}Dialog`, Dialog)
+    app.component(`${prefix}Dropdown`, Dropdown)
   },
 }
 

@@ -7,6 +7,8 @@ import {
   Button,
   Card,
   Checkbox,
+  Dialog,
+  Dropdown,
   Input,
   Radio,
   RadioGroup,
@@ -19,7 +21,7 @@ import {
   Tooltip,
   useColorMode,
 } from './lib'
-import type { ButtonSize, ButtonVariant, TagVariant } from './lib'
+import type { ButtonSize, ButtonVariant, DropdownItem, TagVariant } from './lib'
 
 const variants: ButtonVariant[] = ['primary', 'secondary', 'ghost', 'danger']
 const sizes: ButtonSize[] = ['sm', 'md', 'lg']
@@ -47,6 +49,14 @@ const countries = [
 ]
 const plan = ref('pro')
 const shipping = ref('standard')
+const dialogOpen = ref(false)
+const lastAction = ref('—')
+const menuItems: DropdownItem[] = [
+  { label: 'Editar', value: 'edit' },
+  { label: 'Duplicar', value: 'duplicate' },
+  { divider: true },
+  { label: 'Borrar', value: 'delete', danger: true },
+]
 </script>
 
 <template>
@@ -315,6 +325,54 @@ const shipping = ref('standard')
           <Button variant="ghost">Derecha</Button>
         </Tooltip>
       </div>
+    </section>
+
+    <section>
+      <h2>Dropdown</h2>
+      <div class="row">
+        <Dropdown :items="menuItems" @select="lastAction = String($event)" />
+        <Dropdown :items="menuItems" placement="bottom-end">
+          <template #trigger="{ toggle, open }">
+            <Button variant="secondary" @click="toggle">
+              Acciones {{ open ? '▲' : '▼' }}
+            </Button>
+          </template>
+        </Dropdown>
+      </div>
+      <p class="hint">
+        Última acción: <code>{{ lastAction }}</code>
+      </p>
+    </section>
+
+    <section>
+      <h2>Dialog</h2>
+      <div class="row">
+        <Button @click="dialogOpen = true">Abrir diálogo</Button>
+      </div>
+      <Dialog
+        v-model="dialogOpen"
+        title="¿Borrar el elemento?"
+        description="Esta acción no se puede deshacer."
+      >
+        <p>
+          Se eliminará de forma permanente. Si prefieres conservarlo, puedes
+          archivarlo en su lugar.
+        </p>
+        <template #footer="{ close }">
+          <Button variant="ghost" @click="close">Cancelar</Button>
+          <Button
+            variant="danger"
+            @click="
+              () => {
+                lastAction = 'delete (dialog)'
+                close()
+              }
+            "
+          >
+            Borrar
+          </Button>
+        </template>
+      </Dialog>
     </section>
 
     <footer>Clicks registrados: {{ clicks }}</footer>

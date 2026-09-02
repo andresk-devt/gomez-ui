@@ -1,5 +1,8 @@
+/** Escala de tamaño compartida por los componentes. */
+export type Size = 'sm' | 'md' | 'lg'
+
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
-export type ButtonSize = 'sm' | 'md' | 'lg'
+export type ButtonSize = Size
 
 export interface ButtonProps {
   /** Estilo visual del botón. */
@@ -14,4 +17,9 @@ export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset'
   /** Ocupa todo el ancho disponible. */
   block?: boolean
+}
+
+export interface ThemeSwitcherProps {
+  /** Tamaño del botón. */
+  size?: Size
 }

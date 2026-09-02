@@ -7,19 +7,16 @@
     'Segoe UI',
     Roboto,
     sans-serif;
-  color: #08060d;
-  background: #fff;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f3f4f6;
-    background: #16171d;
-  }
 }
 
 body {
   margin: 0;
+  /* Tokens de gomez-ui, inyectados por los componentes. */
+  color: var(--gmz-color-fg, #08060d);
+  background: var(--gmz-color-bg, #fff);
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
 }
 
 .page {
@@ -31,14 +28,21 @@ body {
   gap: 36px;
 }
 
-.page header h1 {
+.page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.page__header h1 {
   margin: 0 0 4px;
   font-size: 32px;
 }
 
-.page header p {
+.page__header p {
   margin: 0;
-  opacity: 0.7;
+  color: var(--gmz-color-fg-muted, #6b6375);
 }
 
 .page h2 {
@@ -46,14 +50,20 @@ body {
   font-size: 15px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  opacity: 0.6;
+  color: var(--gmz-color-fg-muted, #6b6375);
 }
 
 .page code {
   font-family: ui-monospace, Consolas, monospace;
-  background: rgba(128, 128, 128, 0.15);
+  background: var(--gmz-color-surface-2, rgba(128, 128, 128, 0.15));
   padding: 2px 6px;
   border-radius: 4px;
+}
+
+.hint {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--gmz-color-fg-muted, #6b6375);
 }
 
 .grid {
@@ -70,6 +80,6 @@ body {
 }
 
 .page footer {
-  opacity: 0.6;
+  color: var(--gmz-color-fg-muted, #6b6375);
   font-size: 14px;
 }

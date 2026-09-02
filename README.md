@@ -1,10 +1,10 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Empieza con `Button`; en camino: `Sidebar`, `Tag`, `Alert`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `ThemeSwitcher`; en camino: `Input`, `Card`, `Sidebar`, `Tag`, `Alert`, …
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
-- Tematizable con custom properties `--gmz-*`.
+- **Modo claro/oscuro** integrado (`useColorMode`), tematizable con custom properties `--gmz-*`.
 - Distribución ESM + CJS. `vue` es `peerDependency`.
 
 ## Instalación
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton> disponible en toda la app.
+// <GmzButton>, <GmzThemeSwitcher>… disponibles en toda la app.
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -59,15 +59,68 @@ createApp(App).use(GomezUI).mount('#app')
 | `default` | Contenido del botón.                         |
 | `icon`    | Icono antes del texto (oculto en `loading`). |
 
-## Tema
+## `ThemeSwitcher`
 
-Sobreescribe las custom properties en tu CSS global:
+Botón que recorre `claro → oscuro → sistema`. No necesita props ni configuración; usa
+`useColorMode` por debajo.
+
+```vue
+<script setup lang="ts">
+import { ThemeSwitcher } from 'gomez-ui'
+</script>
+
+<template>
+  <ThemeSwitcher size="md" />
+</template>
+```
+
+| Prop   | Tipo                   | Default | Descripción      |
+| ------ | ---------------------- | ------- | ---------------- |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'`  | Tamaño del botón |
+
+## Modo claro/oscuro — `useColorMode`
+
+```ts
+import { useColorMode } from 'gomez-ui'
+
+const { mode, resolved, isDark, setMode, toggle } = useColorMode()
+
+setMode('dark') // fuerza oscuro
+setMode('system') // vuelve a seguir la preferencia del SO
+toggle() // claro → oscuro → sistema → …
+```
+
+- **`mode`** (`Ref<'light' | 'dark' | 'system'>`, solo lectura): preferencia elegida.
+- **`resolved`** (`Ref<'light' | 'dark'>`): tema efectivo tras resolver `'system'`.
+- **`isDark`** (`Ref<boolean>`).
+- Persiste en `localStorage` (`gmz-color-mode`) y se sincroniza entre pestañas.
+
+### Cómo funciona
+
+- Sin `data-theme` en `<html>` → se sigue `prefers-color-scheme`.
+- `useColorMode` pone `data-theme="light" | "dark"` en `<html>` cuando fuerzas un tema, y lo
+  quita al volver a `'system'`. El override manual **siempre gana**.
+- Para evitar el parpadeo inicial en SSR/carga, puedes fijar el atributo antes de montar Vue:
+  ```html
+  <script>
+    const m = localStorage.getItem('gmz-color-mode')
+    if (m === 'light' || m === 'dark')
+      document.documentElement.dataset.theme = m
+  </script>
+  ```
+
+## Tema (tokens)
+
+Sobreescribe cualquier `--gmz-*` en tu CSS global (afecta a claro y oscuro):
 
 ```css
 :root {
   --gmz-color-accent: #2563eb;
   --gmz-color-accent-hover: #1d4ed8;
   --gmz-radius: 6px;
+}
+:root[data-theme='dark'] {
+  --gmz-color-accent: #60a5fa;
 }
 ```
 

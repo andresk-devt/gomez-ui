@@ -1,50 +1,148 @@
 /**
  * Tokens de diseño de gomez-ui.
- * Sobreescribe cualquiera de estas custom properties en tu app para tematizar.
+ *
+ * Modo claro/oscuro:
+ *   - Sin `data-theme` en <html>: sigue `prefers-color-scheme` del sistema.
+ *   - `data-theme="light"` / `data-theme="dark"` en <html>: fuerza el tema (gana siempre).
+ * El composable `useColorMode()` gestiona ese atributo.
+ *
+ * Para tematizar tu app, sobreescribe cualquier `--gmz-*` en tu CSS global.
  */
+
 :root {
+  /* Tipografía */
   --gmz-font:
     system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --gmz-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
+  /* Forma */
+  --gmz-radius-sm: 4px;
   --gmz-radius: 8px;
-  --gmz-focus-ring: 2px solid var(--gmz-color-accent);
-  --gmz-focus-offset: 2px;
-  --gmz-transition: 140ms ease;
+  --gmz-radius-lg: 14px;
+  --gmz-radius-full: 9999px;
 
-  /* Superficies y texto */
+  /* Espaciado */
+  --gmz-space-1: 4px;
+  --gmz-space-2: 8px;
+  --gmz-space-3: 12px;
+  --gmz-space-4: 16px;
+  --gmz-space-5: 24px;
+  --gmz-space-6: 32px;
+
+  /* Interacción */
+  --gmz-transition: 140ms ease;
+  --gmz-focus-offset: 2px;
+  --gmz-focus-ring: 2px solid var(--gmz-color-accent);
+
+  /* --- Paleta: modo claro (por defecto) --- */
+  --gmz-color-bg: #ffffff;
+  --gmz-color-surface: #ffffff;
+  --gmz-color-surface-2: #f4f3f6;
+  --gmz-color-border: #e5e4e7;
+  --gmz-color-border-strong: #cdccd1;
+  --gmz-color-overlay: rgba(8, 6, 13, 0.44);
+
   --gmz-color-fg: #08060d;
   --gmz-color-fg-muted: #6b6375;
-  --gmz-color-bg: #ffffff;
-  --gmz-color-border: #e5e4e7;
+  --gmz-color-fg-subtle: #938c9e;
+  --gmz-color-fg-on-accent: #ffffff;
 
-  /* Acento / primary */
   --gmz-color-accent: #aa3bff;
-  --gmz-color-accent-fg: #ffffff;
   --gmz-color-accent-hover: #9526e8;
+  --gmz-color-accent-active: #7d1fce;
   --gmz-color-accent-soft: rgba(170, 59, 255, 0.1);
   --gmz-color-accent-soft-hover: rgba(170, 59, 255, 0.18);
 
-  /* Danger */
+  --gmz-color-success: #1f9d55;
+  --gmz-color-success-soft: rgba(31, 157, 85, 0.12);
+  --gmz-color-warning: #c77700;
+  --gmz-color-warning-soft: rgba(199, 119, 0, 0.12);
   --gmz-color-danger: #e5484d;
-  --gmz-color-danger-fg: #ffffff;
   --gmz-color-danger-hover: #d13639;
+  --gmz-color-danger-soft: rgba(229, 72, 77, 0.12);
+  --gmz-color-info: #3b82f6;
+  --gmz-color-info-soft: rgba(59, 130, 246, 0.12);
+
+  --gmz-shadow-sm: 0 1px 2px rgba(8, 6, 13, 0.08);
+  --gmz-shadow:
+    0 4px 6px -2px rgba(8, 6, 13, 0.06), 0 10px 20px -4px rgba(8, 6, 13, 0.12);
+  --gmz-shadow-lg:
+    0 12px 28px -6px rgba(8, 6, 13, 0.22), 0 8px 10px -6px rgba(8, 6, 13, 0.1);
 }
 
+/* --- Paleta: modo oscuro --- */
+/* 1) automático cuando el sistema está en oscuro y no hay override a "light" */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --gmz-color-fg: #f3f4f6;
-    --gmz-color-fg-muted: #9ca3af;
-    --gmz-color-bg: #16171d;
-    --gmz-color-border: #2e303a;
+  :root:not([data-theme='light']) {
+    --gmz-color-bg: #121118;
+    --gmz-color-surface: #1a1922;
+    --gmz-color-surface-2: #23222d;
+    --gmz-color-border: #2e2d3a;
+    --gmz-color-border-strong: #43414f;
+    --gmz-color-overlay: rgba(0, 0, 0, 0.6);
+
+    --gmz-color-fg: #f3f2f7;
+    --gmz-color-fg-muted: #a7a2b3;
+    --gmz-color-fg-subtle: #726d80;
+    --gmz-color-fg-on-accent: #1a1030;
 
     --gmz-color-accent: #c084fc;
-    --gmz-color-accent-fg: #1a1030;
     --gmz-color-accent-hover: #d0a3fd;
-    --gmz-color-accent-soft: rgba(192, 132, 252, 0.15);
-    --gmz-color-accent-soft-hover: rgba(192, 132, 252, 0.25);
+    --gmz-color-accent-active: #ddbcfe;
+    --gmz-color-accent-soft: rgba(192, 132, 252, 0.16);
+    --gmz-color-accent-soft-hover: rgba(192, 132, 252, 0.26);
 
+    --gmz-color-success: #3ddc84;
+    --gmz-color-success-soft: rgba(61, 220, 132, 0.16);
+    --gmz-color-warning: #f5b544;
+    --gmz-color-warning-soft: rgba(245, 181, 68, 0.16);
     --gmz-color-danger: #ff6369;
-    --gmz-color-danger-fg: #1a1030;
     --gmz-color-danger-hover: #ff7a7f;
+    --gmz-color-danger-soft: rgba(255, 99, 105, 0.16);
+    --gmz-color-info: #6aa8ff;
+    --gmz-color-info-soft: rgba(106, 168, 255, 0.16);
+
+    --gmz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --gmz-shadow:
+      0 4px 6px -2px rgba(0, 0, 0, 0.4), 0 10px 20px -4px rgba(0, 0, 0, 0.5);
+    --gmz-shadow-lg:
+      0 12px 28px -6px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
   }
+}
+
+/* 2) override manual: `data-theme="dark"` gana aunque el sistema esté en claro */
+:root[data-theme='dark'] {
+  --gmz-color-bg: #121118;
+  --gmz-color-surface: #1a1922;
+  --gmz-color-surface-2: #23222d;
+  --gmz-color-border: #2e2d3a;
+  --gmz-color-border-strong: #43414f;
+  --gmz-color-overlay: rgba(0, 0, 0, 0.6);
+
+  --gmz-color-fg: #f3f2f7;
+  --gmz-color-fg-muted: #a7a2b3;
+  --gmz-color-fg-subtle: #726d80;
+  --gmz-color-fg-on-accent: #1a1030;
+
+  --gmz-color-accent: #c084fc;
+  --gmz-color-accent-hover: #d0a3fd;
+  --gmz-color-accent-active: #ddbcfe;
+  --gmz-color-accent-soft: rgba(192, 132, 252, 0.16);
+  --gmz-color-accent-soft-hover: rgba(192, 132, 252, 0.26);
+
+  --gmz-color-success: #3ddc84;
+  --gmz-color-success-soft: rgba(61, 220, 132, 0.16);
+  --gmz-color-warning: #f5b544;
+  --gmz-color-warning-soft: rgba(245, 181, 68, 0.16);
+  --gmz-color-danger: #ff6369;
+  --gmz-color-danger-hover: #ff7a7f;
+  --gmz-color-danger-soft: rgba(255, 99, 105, 0.16);
+  --gmz-color-info: #6aa8ff;
+  --gmz-color-info-soft: rgba(106, 168, 255, 0.16);
+
+  --gmz-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --gmz-shadow:
+    0 4px 6px -2px rgba(0, 0, 0, 0.4), 0 10px 20px -4px rgba(0, 0, 0, 0.5);
+  --gmz-shadow-lg:
+    0 12px 28px -6px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
 }

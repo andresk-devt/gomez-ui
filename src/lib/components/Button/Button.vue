@@ -121,7 +121,7 @@ function onClick(event: MouseEvent) {
 /* Variantes */
 .gmz-btn--primary {
   background-color: var(--gmz-color-accent);
-  color: var(--gmz-color-accent-fg);
+  color: var(--gmz-color-fg-on-accent);
 }
 .gmz-btn--primary:hover:not(:disabled) {
   background-color: var(--gmz-color-accent-hover);
@@ -148,7 +148,7 @@ function onClick(event: MouseEvent) {
 
 .gmz-btn--danger {
   background-color: var(--gmz-color-danger);
-  color: var(--gmz-color-danger-fg);
+  color: var(--gmz-color-fg-on-accent);
 }
 .gmz-btn--danger:hover:not(:disabled) {
   background-color: var(--gmz-color-danger-hover);

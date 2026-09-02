@@ -1,20 +1,40 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button } from './lib'
+import { Button, ThemeSwitcher, useColorMode } from './lib'
 import type { ButtonSize, ButtonVariant } from './lib'
 
 const variants: ButtonVariant[] = ['primary', 'secondary', 'ghost', 'danger']
 const sizes: ButtonSize[] = ['sm', 'md', 'lg']
 
+const { mode, resolved } = useColorMode()
 const clicks = ref(0)
 </script>
 
 <template>
   <main class="page">
-    <header>
-      <h1>gomez-ui</h1>
-      <p>Playground de componentes · <code>Button</code></p>
+    <header class="page__header">
+      <div>
+        <h1>gomez-ui</h1>
+        <p>
+          Playground · modo <code>{{ mode }}</code> → resuelto
+          <code>{{ resolved }}</code>
+        </p>
+      </div>
+      <ThemeSwitcher />
     </header>
+
+    <section>
+      <h2>ThemeSwitcher</h2>
+      <div class="row">
+        <ThemeSwitcher size="sm" />
+        <ThemeSwitcher size="md" />
+        <ThemeSwitcher size="lg" />
+      </div>
+      <p class="hint">
+        Cicla claro → oscuro → sistema · modo <code>{{ mode }}</code> · resuelto
+        <code>{{ resolved }}</code>
+      </p>
+    </section>
 
     <section>
       <h2>Variantes × tamaños</h2>

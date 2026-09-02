@@ -1,0 +1,24 @@
+import { describe, expect, it } from 'vitest'
+import { mount } from '@vue/test-utils'
+import __NAME__ from './__NAME__.vue'
+
+describe('__NAME__', () => {
+  it('renderiza el slot por defecto', () => {
+    const wrapper = mount(__NAME__, { slots: { default: 'contenido' } })
+    expect(wrapper.text()).toContain('contenido')
+  })
+
+  it('aplica las clases de variant y size', () => {
+    const wrapper = mount(__NAME__, { props: { variant: 'primary', size: 'lg' } })
+    expect(wrapper.classes()).toContain('gmz-__KEBAB__--primary')
+    expect(wrapper.classes()).toContain('gmz-__KEBAB__--lg')
+  })
+
+  it('emite click', async () => {
+    const wrapper = mount(__NAME__)
+    await wrapper.trigger('click')
+    expect(wrapper.emitted('click')).toHaveLength(1)
+  })
+
+  // TODO: casos de accesibilidad (roles, aria-*, foco) y de estados (disabled/loading…)
+})

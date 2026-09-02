@@ -1,0 +1,40 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import type { __NAME__Props } from '../../types'
+
+const props = withDefaults(defineProps<__NAME__Props>(), {
+  variant: 'primary',
+  size: 'md',
+})
+
+const emit = defineEmits<{
+  // ajusta a los eventos reales del componente
+  click: [event: MouseEvent]
+}>()
+
+const classes = computed(() => [
+  'gmz-__KEBAB__',
+  `gmz-__KEBAB__--${props.variant}`,
+  `gmz-__KEBAB__--${props.size}`,
+])
+
+function onClick(event: MouseEvent) {
+  emit('click', event)
+}
+</script>
+
+<template>
+  <div :class="classes" @click="onClick">
+    <slot />
+  </div>
+</template>
+
+<style>
+@import '../../styles/tokens.css';
+
+.gmz-__KEBAB__ {
+  font-family: var(--gmz-font);
+  border-radius: var(--gmz-radius);
+  color: var(--gmz-color-fg);
+}
+</style>

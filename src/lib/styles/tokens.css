@@ -1,0 +1,50 @@
+/**
+ * Tokens de diseño de gomez-ui.
+ * Sobreescribe cualquiera de estas custom properties en tu app para tematizar.
+ */
+:root {
+  --gmz-font:
+    system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  --gmz-radius: 8px;
+  --gmz-focus-ring: 2px solid var(--gmz-color-accent);
+  --gmz-focus-offset: 2px;
+  --gmz-transition: 140ms ease;
+
+  /* Superficies y texto */
+  --gmz-color-fg: #08060d;
+  --gmz-color-fg-muted: #6b6375;
+  --gmz-color-bg: #ffffff;
+  --gmz-color-border: #e5e4e7;
+
+  /* Acento / primary */
+  --gmz-color-accent: #aa3bff;
+  --gmz-color-accent-fg: #ffffff;
+  --gmz-color-accent-hover: #9526e8;
+  --gmz-color-accent-soft: rgba(170, 59, 255, 0.1);
+  --gmz-color-accent-soft-hover: rgba(170, 59, 255, 0.18);
+
+  /* Danger */
+  --gmz-color-danger: #e5484d;
+  --gmz-color-danger-fg: #ffffff;
+  --gmz-color-danger-hover: #d13639;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --gmz-color-fg: #f3f4f6;
+    --gmz-color-fg-muted: #9ca3af;
+    --gmz-color-bg: #16171d;
+    --gmz-color-border: #2e303a;
+
+    --gmz-color-accent: #c084fc;
+    --gmz-color-accent-fg: #1a1030;
+    --gmz-color-accent-hover: #d0a3fd;
+    --gmz-color-accent-soft: rgba(192, 132, 252, 0.15);
+    --gmz-color-accent-soft-hover: rgba(192, 132, 252, 0.25);
+
+    --gmz-color-danger: #ff6369;
+    --gmz-color-danger-fg: #1a1030;
+    --gmz-color-danger-hover: #ff7a7f;
+  }
+}

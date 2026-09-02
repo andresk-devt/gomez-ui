@@ -17,6 +17,11 @@ import { Spinner } from './components/Spinner'
 import { Tooltip } from './components/Tooltip'
 import { Dialog } from './components/Dialog'
 import { Dropdown } from './components/Dropdown'
+import { Tabs } from './components/Tabs'
+import { Accordion } from './components/Accordion'
+import { Progress } from './components/Progress'
+import { Skeleton } from './components/Skeleton'
+import { Breadcrumb } from './components/Breadcrumb'
 
 export {
   Button,
@@ -37,6 +42,11 @@ export {
   Tooltip,
   Dialog,
   Dropdown,
+  Tabs,
+  Accordion,
+  Progress,
+  Skeleton,
+  Breadcrumb,
 }
 export { useColorMode } from './composables/useColorMode'
 export type { ColorMode, ResolvedColorMode } from './composables/useColorMode'
@@ -84,6 +94,18 @@ export type {
   DropdownItemObject,
   DropdownDivider,
   DropdownPlacement,
+  TabsProps,
+  TabItem,
+  TabsVariant,
+  AccordionProps,
+  AccordionItem,
+  AccordionModelValue,
+  ProgressProps,
+  ProgressVariant,
+  SkeletonProps,
+  SkeletonVariant,
+  BreadcrumbProps,
+  BreadcrumbItem,
 } from './types'
 
 export interface GomezUIOptions {
@@ -116,6 +138,11 @@ const GomezUI: Plugin<[GomezUIOptions?]> = {
     app.component(`${prefix}Tooltip`, Tooltip)
     app.component(`${prefix}Dialog`, Dialog)
     app.component(`${prefix}Dropdown`, Dropdown)
+    app.component(`${prefix}Tabs`, Tabs)
+    app.component(`${prefix}Accordion`, Accordion)
+    app.component(`${prefix}Progress`, Progress)
+    app.component(`${prefix}Skeleton`, Skeleton)
+    app.component(`${prefix}Breadcrumb`, Breadcrumb)
   },
 }
 

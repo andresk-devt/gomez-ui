@@ -360,3 +360,100 @@ export interface DropdownProps {
   /** Cerrar el menú al elegir un item. */
   closeOnSelect?: boolean
 }
+
+export interface TabItem {
+  /** Texto visible de la pestaña. */
+  label: string
+  /** Valor único de la pestaña. */
+  value: string | number
+  /** Deshabilita la pestaña. */
+  disabled?: boolean
+}
+
+export type TabsVariant = 'line' | 'pill'
+
+export interface TabsProps {
+  /** Valor de la pestaña activa (`v-model`). */
+  modelValue?: string | number
+  /** Pestañas del componente. */
+  items?: TabItem[]
+  /** Estilo: subrayado (`line`) o pastilla (`pill`). */
+  variant?: TabsVariant
+  /** Tamaño. */
+  size?: Size
+  /** Reparte las pestañas a lo ancho por igual. */
+  fitted?: boolean
+}
+
+export interface AccordionItem {
+  /** Texto de la cabecera. */
+  label: string
+  /** Valor único del panel. */
+  value: string | number
+  /** Deshabilita el panel. */
+  disabled?: boolean
+}
+
+export type AccordionModelValue =
+  string | number | Array<string | number> | null
+
+export interface AccordionProps {
+  /** Panel(es) abierto(s) (`v-model`). Array si `multiple`. */
+  modelValue?: AccordionModelValue
+  /** Paneles del acordeón. */
+  items?: AccordionItem[]
+  /** Permite varios paneles abiertos a la vez. */
+  multiple?: boolean
+  /** Tamaño. */
+  size?: Size
+}
+
+export type ProgressVariant = 'accent' | 'success' | 'warning' | 'danger'
+
+export interface ProgressProps {
+  /** Valor actual (0..`max`). Si se omite, la barra es indeterminada. */
+  value?: number
+  /** Valor máximo. */
+  max?: number
+  /** Grosor de la barra. */
+  size?: Size
+  /** Color de la barra. */
+  variant?: ProgressVariant
+  /** Etiqueta accesible. */
+  label?: string
+  /** Muestra el porcentaje como texto. */
+  showValue?: boolean
+}
+
+export type SkeletonVariant = 'text' | 'rect' | 'circle'
+
+export interface SkeletonProps {
+  /** Forma del bloque. */
+  variant?: SkeletonVariant
+  /** Ancho (`number` = píxeles). */
+  width?: string | number
+  /** Alto (`number` = píxeles). */
+  height?: string | number
+  /** Radio de las esquinas (`number` = píxeles). */
+  radius?: string | number
+  /** Nº de líneas para `variant="text"`. */
+  lines?: number
+  /** Anima el brillo. */
+  animated?: boolean
+}
+
+export interface BreadcrumbItem {
+  /** Texto visible. */
+  label: string
+  /** Enlace; si se omite y no es el último, se emite `select`. */
+  href?: string
+  /** Deshabilita el item. */
+  disabled?: boolean
+}
+
+export interface BreadcrumbProps {
+  /** Ruta de navegación; el último item es la página actual. */
+  items?: BreadcrumbItem[]
+  /** Separador entre items. */
+  separator?: string
+}

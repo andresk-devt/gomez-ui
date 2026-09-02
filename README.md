@@ -1,6 +1,6 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `Dialog`, `Dropdown`, `ThemeSwitcher`; en camino: `Sidebar`, `Tabs`, `Toast`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `Dialog`, `Dropdown`, `Tabs`, `Accordion`, `Progress`, `Skeleton`, `Breadcrumb`, `ThemeSwitcher`; en camino: `Sidebar`, `Toast`, `Table`, …
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton>, <GmzInput>, <GmzSelect>, <GmzDialog>, <GmzDropdown>, <GmzTooltip>…
+// <GmzButton>, <GmzInput>, <GmzTabs>, <GmzAccordion>, <GmzDialog>, <GmzDropdown>…
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -557,6 +557,153 @@ para activar, `Escape` y clic fuera para cerrar, foco devuelto al trigger. Puede
 | --------- | ------------------ | ---------------------------------------------------- |
 | `trigger` | `{ open, toggle }` | Elemento que abre el menú (por defecto un `Button`). |
 | `default` | `{ close }`        | Contenido extra del menú tras los `items`.           |
+
+## `Tabs`
+
+Pestañas accesibles: `role="tablist"`/`tab`/`tabpanel`, navegación con ←/→/Home/End
+(saltando deshabilitadas). El contenido de cada panel va en un slot con nombre igual al
+`value`. Controlado con `v-model`.
+
+```vue
+<template>
+  <Tabs
+    v-model="tab"
+    :items="[
+      { label: 'Cuenta', value: 'account' },
+      { label: 'Seguridad', value: 'security' },
+    ]"
+  >
+    <template #account>Datos de la cuenta…</template>
+    <template #security>Contraseña y 2FA…</template>
+  </Tabs>
+</template>
+```
+
+| Prop         | Tipo                            | Default   | Descripción                      |
+| ------------ | ------------------------------- | --------- | -------------------------------- |
+| `modelValue` | `string \| number`              | 1ª activa | Pestaña activa (`v-model`).      |
+| `items`      | `{ label; value; disabled? }[]` | `[]`      | Pestañas.                        |
+| `variant`    | `'line' \| 'pill'`              | `'line'`  | Subrayado o pastilla.            |
+| `size`       | `'sm' \| 'md' \| 'lg'`          | `'md'`    | Tamaño.                          |
+| `fitted`     | `boolean`                       | `false`   | Reparte las pestañas a lo ancho. |
+
+| Evento              | Payload            | Descripción            |
+| ------------------- | ------------------ | ---------------------- |
+| `update:modelValue` | `string \| number` | Al cambiar de pestaña. |
+
+| Slot      | Props       | Descripción                         |
+| --------- | ----------- | ----------------------------------- |
+| `<value>` | `{ value }` | Contenido del panel de esa pestaña. |
+
+## `Accordion`
+
+Paneles plegables: cada cabecera es un `<button>` con `aria-expanded`/`aria-controls` y la
+región `role="region"`. `v-model` con un value (modo simple, `null` = todo cerrado) o un
+array (`multiple`). Contenido por slot con nombre igual al `value`.
+
+```vue
+<template>
+  <Accordion
+    v-model="open"
+    multiple
+    :items="[
+      { label: 'Envíos', value: 'shipping' },
+      { label: 'Devoluciones', value: 'returns' },
+    ]"
+  >
+    <template #shipping>Entrega en 24-48h.</template>
+    <template #returns>30 días para devolver.</template>
+  </Accordion>
+</template>
+```
+
+| Prop         | Tipo                                               | Default | Descripción                       |
+| ------------ | -------------------------------------------------- | ------- | --------------------------------- |
+| `modelValue` | `string \| number \| (string \| number)[] \| null` | —       | Panel(es) abierto(s) (`v-model`). |
+| `items`      | `{ label; value; disabled? }[]`                    | `[]`    | Paneles.                          |
+| `multiple`   | `boolean`                                          | `false` | Permite varios paneles abiertos.  |
+| `size`       | `'sm' \| 'md' \| 'lg'`                             | `'md'`  | Tamaño.                           |
+
+| Evento              | Payload                                            | Descripción               |
+| ------------------- | -------------------------------------------------- | ------------------------- |
+| `update:modelValue` | `string \| number \| (string \| number)[] \| null` | Al abrir/cerrar un panel. |
+
+| Slot      | Props       | Descripción          |
+| --------- | ----------- | -------------------- |
+| `<value>` | `{ value }` | Contenido del panel. |
+
+## `Progress`
+
+Barra de progreso. Con `value` es determinada (`aria-valuenow`); sin `value`, indeterminada.
+
+```vue
+<template>
+  <Progress :value="65" show-value label="Subida" />
+  <Progress label="Cargando" />
+  <!-- indeterminada -->
+</template>
+```
+
+| Prop        | Tipo                                             | Default    | Descripción                                     |
+| ----------- | ------------------------------------------------ | ---------- | ----------------------------------------------- |
+| `value`     | `number`                                         | —          | Valor actual (0..`max`). Sin él, indeterminada. |
+| `max`       | `number`                                         | `100`      | Valor máximo.                                   |
+| `size`      | `'sm' \| 'md' \| 'lg'`                           | `'md'`     | Grosor.                                         |
+| `variant`   | `'accent' \| 'success' \| 'warning' \| 'danger'` | `'accent'` | Color de la barra.                              |
+| `label`     | `string`                                         | —          | Etiqueta accesible (`aria-label`).              |
+| `showValue` | `boolean`                                        | `false`    | Muestra el porcentaje como texto.               |
+
+## `Skeleton`
+
+Bloque de carga decorativo (`aria-hidden`).
+
+```vue
+<template>
+  <Skeleton variant="circle" :width="48" :height="48" />
+  <Skeleton :lines="3" />
+  <Skeleton variant="rect" :height="120" />
+</template>
+```
+
+| Prop       | Tipo                           | Default  | Descripción                             |
+| ---------- | ------------------------------ | -------- | --------------------------------------- |
+| `variant`  | `'text' \| 'rect' \| 'circle'` | `'text'` | Forma.                                  |
+| `width`    | `string \| number`             | —        | Ancho (`number` = píxeles).             |
+| `height`   | `string \| number`             | —        | Alto (`number` = píxeles).              |
+| `radius`   | `string \| number`             | —        | Radio de esquinas (`number` = píxeles). |
+| `lines`    | `number`                       | `1`      | Nº de líneas para `variant="text"`.     |
+| `animated` | `boolean`                      | `true`   | Anima el brillo.                        |
+
+## `Breadcrumb`
+
+Ruta de navegación: `<nav aria-label="Breadcrumb">` + `<ol>`; el último item es la página
+actual (`aria-current="page"`). Items con `href` → enlace; sin `href` → botón que emite
+`select`.
+
+```vue
+<template>
+  <Breadcrumb
+    :items="[
+      { label: 'Inicio', href: '/' },
+      { label: 'Productos', href: '/productos' },
+      { label: 'Camisa azul' },
+    ]"
+  />
+</template>
+```
+
+| Prop        | Tipo                            | Default | Descripción                          |
+| ----------- | ------------------------------- | ------- | ------------------------------------ |
+| `items`     | `{ label; href?; disabled? }[]` | `[]`    | Ruta; el último es la página actual. |
+| `separator` | `string`                        | `'/'`   | Separador entre items.               |
+
+| Evento   | Payload         | Descripción                              |
+| -------- | --------------- | ---------------------------------------- |
+| `select` | `(item, index)` | Al pulsar un item intermedio sin `href`. |
+
+| Slot        | Descripción              |
+| ----------- | ------------------------ |
+| `separator` | Separador personalizado. |
 
 ## `ThemeSwitcher`
 

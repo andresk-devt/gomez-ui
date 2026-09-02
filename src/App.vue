@@ -2,15 +2,21 @@
 import { ref } from 'vue'
 import {
   Alert,
+  Avatar,
+  Badge,
   Button,
   Card,
   Checkbox,
   Input,
+  Radio,
+  RadioGroup,
   Select,
+  Spinner,
   Switch,
   Tag,
   Textarea,
   ThemeSwitcher,
+  Tooltip,
   useColorMode,
 } from './lib'
 import type { ButtonSize, ButtonVariant, TagVariant } from './lib'
@@ -39,6 +45,8 @@ const countries = [
   { label: 'Colombia', value: 'co' },
   { label: 'Argentina', value: 'ar' },
 ]
+const plan = ref('pro')
+const shipping = ref('standard')
 </script>
 
 <template>
@@ -232,6 +240,81 @@ const countries = [
       <p class="hint">
         Valor: <code>{{ country || '—' }}</code>
       </p>
+    </section>
+
+    <section>
+      <h2>Radio &amp; RadioGroup</h2>
+      <div class="grid">
+        <RadioGroup
+          v-model="plan"
+          label="Plan"
+          :options="[
+            { label: 'Básico', value: 'basic' },
+            { label: 'Pro', value: 'pro' },
+            { label: 'Enterprise', value: 'ent', disabled: true },
+          ]"
+        />
+        <RadioGroup v-model="shipping" label="Envío" orientation="horizontal">
+          <Radio value="standard" label="Estándar" />
+          <Radio value="express" label="Exprés" />
+          <Radio value="pickup" label="Recogida" />
+        </RadioGroup>
+      </div>
+      <p class="hint">
+        plan: <code>{{ plan }}</code> · envío: <code>{{ shipping }}</code>
+      </p>
+    </section>
+
+    <section>
+      <h2>Avatar</h2>
+      <div class="row">
+        <Avatar name="Ada Lovelace" />
+        <Avatar name="Grace Hopper" variant="accent" shape="rounded" />
+        <Avatar size="lg" variant="success" />
+        <Avatar
+          size="lg"
+          src="https://avatars.githubusercontent.com/u/1?v=4"
+          name="Octo Cat"
+        />
+      </div>
+    </section>
+
+    <section>
+      <h2>Badge</h2>
+      <div class="row">
+        <Badge :content="3">
+          <Button variant="ghost">Mensajes</Button>
+        </Badge>
+        <Badge :content="120" :max="99" variant="accent">
+          <Button variant="ghost">Notificaciones</Button>
+        </Badge>
+        <Badge dot variant="success">
+          <Avatar name="En línea" />
+        </Badge>
+        <Badge :content="7" variant="info" />
+      </div>
+    </section>
+
+    <section>
+      <h2>Spinner</h2>
+      <div class="row">
+        <Spinner size="sm" />
+        <Spinner />
+        <Spinner size="lg" color="fg" />
+        <Button loading>Cargando</Button>
+      </div>
+    </section>
+
+    <section>
+      <h2>Tooltip</h2>
+      <div class="row">
+        <Tooltip content="Añade un elemento nuevo">
+          <Button>Hover / foco</Button>
+        </Tooltip>
+        <Tooltip content="A la derecha" placement="right">
+          <Button variant="ghost">Derecha</Button>
+        </Tooltip>
+      </div>
     </section>
 
     <footer>Clicks registrados: {{ clicks }}</footer>

@@ -1,6 +1,6 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Card`, `Alert`, `Tag`, `ThemeSwitcher`; en camino: `Sidebar`, `Dialog`, `Radio`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `ThemeSwitcher`; en camino: `Sidebar`, `Dialog`, `Menu`, …
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton>, <GmzInput>, <GmzSelect>, <GmzCheckbox>, <GmzSwitch>, <GmzCard>, <GmzAlert>…
+// <GmzButton>, <GmzInput>, <GmzSelect>, <GmzRadioGroup>, <GmzBadge>, <GmzAvatar>, <GmzTooltip>…
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -321,6 +321,152 @@ const options = [
 | ------------------- | ------------------ | ------------------------------------ |
 | `update:modelValue` | `string \| number` | Al elegir una opción.                |
 | `change`            | `string \| number` | Igual que arriba, para conveniencia. |
+
+## `RadioGroup` + `Radio`
+
+`RadioGroup` gestiona el `v-model` y el `name` compartido. Puedes pasarle `options` o
+componer `<Radio>` en el slot por defecto — `RadioGroup` les propaga `name`, `size` y
+`disabled`. `Radio` también funciona suelto con su propio `v-model`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Radio, RadioGroup } from 'gomez-ui'
+
+const plan = ref('pro')
+</script>
+
+<template>
+  <RadioGroup v-model="plan" label="Plan" orientation="horizontal">
+    <Radio value="basic" label="Básico" />
+    <Radio value="pro" label="Pro" />
+    <Radio value="ent" label="Enterprise" disabled />
+  </RadioGroup>
+</template>
+```
+
+### `RadioGroup`
+
+| Prop          | Tipo                                                  | Default      | Descripción                                  |
+| ------------- | ----------------------------------------------------- | ------------ | -------------------------------------------- |
+| `modelValue`  | `string \| number`                                    | —            | Valor seleccionado (`v-model`).              |
+| `options`     | `(string \| number \| { label; value; disabled? })[]` | `[]`         | Opciones (alternativa a componer `<Radio>`). |
+| `name`        | `string`                                              | auto         | `name` compartido por los radios.            |
+| `label`       | `string`                                              | —            | Etiqueta del grupo (`aria-labelledby`).      |
+| `hint`        | `string`                                              | —            | Texto de ayuda; se oculta si hay `error`.    |
+| `error`       | `string`                                              | —            | Mensaje de error; marca el grupo inválido.   |
+| `size`        | `'sm' \| 'md' \| 'lg'`                                | `'md'`       | Tamaño de los radios.                        |
+| `disabled`    | `boolean`                                             | `false`      | Deshabilita todo el grupo.                   |
+| `required`    | `boolean`                                             | `false`      | Marca el grupo como obligatorio.             |
+| `orientation` | `'vertical' \| 'horizontal'`                          | `'vertical'` | Disposición de las opciones.                 |
+
+| Evento              | Payload            | Descripción           |
+| ------------------- | ------------------ | --------------------- |
+| `update:modelValue` | `string \| number` | Al elegir una opción. |
+
+### `Radio`
+
+| Prop         | Tipo                   | Default | Descripción                                       |
+| ------------ | ---------------------- | ------- | ------------------------------------------------- |
+| `value`      | `string \| number`     | —       | **Requerido.** Valor que representa este radio.   |
+| `modelValue` | `string \| number`     | —       | `v-model` cuando se usa fuera de un `RadioGroup`. |
+| `label`      | `string`               | —       | Texto junto al radio (o usa el slot).             |
+| `name`       | `string`               | auto    | Lo hereda del `RadioGroup` si está dentro de uno. |
+| `size`       | `'sm' \| 'md' \| 'lg'` | `'md'`  | Lo hereda del `RadioGroup` si está dentro de uno. |
+| `disabled`   | `boolean`              | `false` | Deshabilita el radio.                             |
+
+## `Badge`
+
+Contador o punto de estado. Con slot por defecto envuelve el contenido y se posiciona en una
+esquina; sin slot se renderiza inline.
+
+```vue
+<template>
+  <Badge :content="8" :max="9">
+    <Button variant="ghost">Bandeja</Button>
+  </Badge>
+  <Badge dot variant="success"><Avatar name="En línea" /></Badge>
+</template>
+```
+
+| Prop        | Tipo                                                                    | Default     | Descripción                                  |
+| ----------- | ----------------------------------------------------------------------- | ----------- | -------------------------------------------- |
+| `content`   | `string \| number`                                                      | —           | Contenido del badge.                         |
+| `variant`   | `'accent' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'danger'`  | Color.                                       |
+| `dot`       | `boolean`                                                               | `false`     | Muestra solo un punto, sin texto.            |
+| `max`       | `number`                                                                | —           | Tope numérico: por encima se muestra `max+`. |
+| `show`      | `boolean`                                                               | `true`      | Controla la visibilidad.                     |
+| `placement` | `'top-end' \| 'top-start' \| 'bottom-end' \| 'bottom-start'`            | `'top-end'` | Posición cuando envuelve contenido.          |
+
+| Slot      | Descripción                                  |
+| --------- | -------------------------------------------- |
+| `default` | Elemento sobre el que se posiciona el badge. |
+
+## `Avatar`
+
+Imagen de usuario con respaldo a iniciales (de `name`) y luego a un icono.
+
+```vue
+<template>
+  <Avatar src="/me.jpg" name="Ada Lovelace" />
+  <Avatar name="Grace Hopper" variant="accent" size="lg" />
+</template>
+```
+
+| Prop      | Tipo                                                                    | Default     | Descripción                         |
+| --------- | ----------------------------------------------------------------------- | ----------- | ----------------------------------- |
+| `src`     | `string`                                                                | —           | URL de la imagen.                   |
+| `alt`     | `string`                                                                | `name`      | Texto alternativo.                  |
+| `name`    | `string`                                                                | —           | Nombre para derivar iniciales.      |
+| `size`    | `'sm' \| 'md' \| 'lg' \| number`                                        | `'md'`      | Tamaño (`number` = píxeles).        |
+| `shape`   | `'circle' \| 'rounded' \| 'square'`                                     | `'circle'`  | Forma.                              |
+| `variant` | `'accent' \| 'neutral' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'neutral'` | Color de la superficie de respaldo. |
+
+| Slot      | Descripción                                           |
+| --------- | ----------------------------------------------------- |
+| `default` | Sustituye al contenido de respaldo (iniciales/icono). |
+
+## `Spinner`
+
+Indicador de carga. Expone `role="status"` y una etiqueta oculta para lectores de pantalla.
+
+```vue
+<template>
+  <Spinner />
+  <Spinner size="lg" color="fg" label="Procesando" />
+</template>
+```
+
+| Prop    | Tipo                             | Default      | Descripción                              |
+| ------- | -------------------------------- | ------------ | ---------------------------------------- |
+| `size`  | `'sm' \| 'md' \| 'lg' \| number` | `'md'`       | Tamaño (`number` = píxeles).             |
+| `color` | `'accent' \| 'current' \| 'fg'`  | `'accent'`   | Color del anillo.                        |
+| `label` | `string`                         | `'Cargando'` | Etiqueta accesible (oculta visualmente). |
+
+## `Tooltip`
+
+Muestra un mensaje al pasar el ratón o al enfocar el contenido. Posicionamiento por CSS (sin
+dependencias). El trigger debe ser un elemento enfocable para el acceso por teclado.
+
+```vue
+<template>
+  <Tooltip content="Guardar cambios" placement="bottom">
+    <Button>Guardar</Button>
+  </Tooltip>
+</template>
+```
+
+| Prop        | Tipo                                     | Default | Descripción                       |
+| ----------- | ---------------------------------------- | ------- | --------------------------------- |
+| `content`   | `string`                                 | —       | Texto (o usa el slot `content`).  |
+| `placement` | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'` | Posición respecto al trigger.     |
+| `disabled`  | `boolean`                                | `false` | Desactiva el tooltip.             |
+| `openDelay` | `number`                                 | `100`   | Retardo en ms antes de mostrarlo. |
+
+| Slot      | Descripción                                      |
+| --------- | ------------------------------------------------ |
+| `default` | El elemento que activa el tooltip.               |
+| `content` | Contenido del tooltip (alternativa a `content`). |
 
 ## `ThemeSwitcher`
 

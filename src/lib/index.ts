@@ -9,6 +9,12 @@ import { Checkbox } from './components/Checkbox'
 import { Switch } from './components/Switch'
 import { Textarea } from './components/Textarea'
 import { Select } from './components/Select'
+import { Radio } from './components/Radio'
+import { RadioGroup } from './components/RadioGroup'
+import { Badge } from './components/Badge'
+import { Avatar } from './components/Avatar'
+import { Spinner } from './components/Spinner'
+import { Tooltip } from './components/Tooltip'
 
 export {
   Button,
@@ -21,6 +27,12 @@ export {
   Switch,
   Textarea,
   Select,
+  Radio,
+  RadioGroup,
+  Badge,
+  Avatar,
+  Spinner,
+  Tooltip,
 }
 export { useColorMode } from './composables/useColorMode'
 export type { ColorMode, ResolvedColorMode } from './composables/useColorMode'
@@ -47,6 +59,20 @@ export type {
   SelectProps,
   SelectOption,
   SelectOptionObject,
+  RadioProps,
+  RadioGroupProps,
+  RadioOption,
+  RadioOptionObject,
+  RadioGroupOrientation,
+  BadgeProps,
+  BadgeVariant,
+  BadgePlacement,
+  AvatarProps,
+  AvatarShape,
+  SpinnerProps,
+  SpinnerColor,
+  TooltipProps,
+  TooltipPlacement,
 } from './types'
 
 export interface GomezUIOptions {
@@ -71,6 +97,12 @@ const GomezUI: Plugin<[GomezUIOptions?]> = {
     app.component(`${prefix}Switch`, Switch)
     app.component(`${prefix}Textarea`, Textarea)
     app.component(`${prefix}Select`, Select)
+    app.component(`${prefix}Radio`, Radio)
+    app.component(`${prefix}RadioGroup`, RadioGroup)
+    app.component(`${prefix}Badge`, Badge)
+    app.component(`${prefix}Avatar`, Avatar)
+    app.component(`${prefix}Spinner`, Spinner)
+    app.component(`${prefix}Tooltip`, Tooltip)
   },
 }
 

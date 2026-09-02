@@ -196,3 +196,116 @@ export interface SelectProps {
   /** `id` del `<select>`; si se omite se genera uno estable. */
   id?: string
 }
+
+export interface RadioOptionObject {
+  /** Texto visible de la opción. */
+  label: string
+  /** Valor asociado a la opción. */
+  value: string | number
+  /** Deshabilita esta opción. */
+  disabled?: boolean
+}
+
+export type RadioOption = string | number | RadioOptionObject
+
+export type RadioGroupOrientation = 'vertical' | 'horizontal'
+
+export interface RadioGroupProps {
+  /** Valor seleccionado (`v-model`). */
+  modelValue?: string | number
+  /** Opciones: strings/números sueltos u objetos `{ label, value, disabled }`. */
+  options?: RadioOption[]
+  /** Atributo `name` compartido; si se omite se genera uno estable. */
+  name?: string
+  /** Etiqueta del grupo. */
+  label?: string
+  /** Texto de ayuda bajo el grupo. */
+  hint?: string
+  /** Mensaje de error; su presencia marca el grupo como inválido. */
+  error?: string
+  /** Tamaño de los radios del grupo. */
+  size?: Size
+  /** Deshabilita todo el grupo. */
+  disabled?: boolean
+  /** Marca el grupo como obligatorio. */
+  required?: boolean
+  /** Disposición de las opciones. */
+  orientation?: RadioGroupOrientation
+}
+
+export interface RadioProps {
+  /** Valor que representa este radio. */
+  value: string | number
+  /** Valor seleccionado cuando se usa suelto (`v-model`). */
+  modelValue?: string | number
+  /** Texto junto al radio (alternativa al slot por defecto). */
+  label?: string
+  /** Atributo `name`; lo hereda del `RadioGroup` si está dentro de uno. */
+  name?: string
+  /** Tamaño; lo hereda del `RadioGroup` si está dentro de uno. */
+  size?: Size
+  /** Deshabilita el radio. */
+  disabled?: boolean
+}
+
+export type BadgeVariant =
+  'accent' | 'neutral' | 'success' | 'warning' | 'danger' | 'info'
+
+export type BadgePlacement =
+  'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'
+
+export interface BadgeProps {
+  /** Contenido numérico o textual del badge. */
+  content?: string | number
+  /** Color del badge. */
+  variant?: BadgeVariant
+  /** Muestra solo un punto, sin contenido. */
+  dot?: boolean
+  /** Tope numérico: por encima se muestra `max+`. */
+  max?: number
+  /** Controla la visibilidad. */
+  show?: boolean
+  /** Posición cuando envuelve contenido (slot por defecto). */
+  placement?: BadgePlacement
+}
+
+export type AvatarShape = 'circle' | 'rounded' | 'square'
+
+export interface AvatarProps {
+  /** URL de la imagen. */
+  src?: string
+  /** Texto alternativo; por defecto usa `name`. */
+  alt?: string
+  /** Nombre para derivar iniciales cuando no hay imagen. */
+  name?: string
+  /** Tamaño: `sm`/`md`/`lg` o un número de píxeles. */
+  size?: Size | number
+  /** Forma del avatar. */
+  shape?: AvatarShape
+  /** Color de la superficie de respaldo (iniciales/icono). */
+  variant?: BadgeVariant
+}
+
+export type SpinnerColor = 'accent' | 'current' | 'fg'
+
+export interface SpinnerProps {
+  /** Tamaño: `sm`/`md`/`lg` o un número de píxeles. */
+  size?: Size | number
+  /** Color del anillo. */
+  color?: SpinnerColor
+  /** Etiqueta accesible (oculta visualmente). */
+  label?: string
+}
+
+export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'
+
+export interface TooltipProps {
+  /** Texto del tooltip (alternativa al slot `content`). */
+  content?: string
+  /** Posición respecto al trigger. */
+  placement?: TooltipPlacement
+  /** Desactiva el tooltip. */
+  disabled?: boolean
+  /** Retardo en ms antes de mostrarlo. */
+  openDelay?: number
+}

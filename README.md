@@ -1,6 +1,6 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Componentes: `Button`, `ThemeSwitcher`; en camino: `Input`, `Card`, `Sidebar`, `Tag`, `Alert`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Card`, `Alert`, `Tag`, `ThemeSwitcher`; en camino: `Sidebar`, `Select`, `Dialog`, …
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton>, <GmzThemeSwitcher>… disponibles en toda la app.
+// <GmzButton>, <GmzInput>, <GmzCard>, <GmzAlert>, <GmzTag>, <GmzThemeSwitcher>…
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -58,6 +58,137 @@ createApp(App).use(GomezUI).mount('#app')
 | --------- | -------------------------------------------- |
 | `default` | Contenido del botón.                         |
 | `icon`    | Icono antes del texto (oculto en `loading`). |
+
+## `Input`
+
+Campo de texto con label, ayuda y estado de error. Soporta `v-model`.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Input } from 'gomez-ui'
+
+const email = ref('')
+</script>
+
+<template>
+  <Input
+    v-model="email"
+    label="Correo"
+    type="email"
+    hint="No lo compartiremos."
+    :error="email && !email.includes('@') ? 'Correo no válido' : undefined"
+  />
+</template>
+```
+
+| Prop          | Tipo                                                                        | Default  | Descripción                                     |
+| ------------- | --------------------------------------------------------------------------- | -------- | ----------------------------------------------- |
+| `modelValue`  | `string \| number`                                                          | —        | Valor del campo (`v-model`).                    |
+| `type`        | `'text' \| 'email' \| 'password' \| 'number' \| 'tel' \| 'url' \| 'search'` | `'text'` | Tipo nativo del `<input>`.                      |
+| `label`       | `string`                                                                    | —        | Etiqueta visible (enlazada con `for`/`id`).     |
+| `placeholder` | `string`                                                                    | —        | Placeholder.                                    |
+| `hint`        | `string`                                                                    | —        | Texto de ayuda; se oculta si hay `error`.       |
+| `error`       | `string`                                                                    | —        | Mensaje de error; marca el campo como inválido. |
+| `size`        | `'sm' \| 'md' \| 'lg'`                                                      | `'md'`   | Tamaño.                                         |
+| `disabled`    | `boolean`                                                                   | `false`  | Deshabilita el campo.                           |
+| `readonly`    | `boolean`                                                                   | `false`  | Solo lectura.                                   |
+| `required`    | `boolean`                                                                   | `false`  | Marca el campo como obligatorio.                |
+| `id`          | `string`                                                                    | auto     | `id` del `<input>`; si se omite se genera uno.  |
+
+| Evento              | Payload      | Descripción                    |
+| ------------------- | ------------ | ------------------------------ |
+| `update:modelValue` | `string`     | Al escribir en el campo.       |
+| `focus`             | `FocusEvent` | Passthrough del evento nativo. |
+| `blur`              | `FocusEvent` | Passthrough del evento nativo. |
+
+| Slot      | Descripción                    |
+| --------- | ------------------------------ |
+| `prepend` | Contenido al inicio del campo. |
+| `append`  | Contenido al final del campo.  |
+
+## `Card`
+
+Contenedor con `header`, cuerpo y `footer` opcionales.
+
+```vue
+<template>
+  <Card variant="outlined" title="Resumen">
+    Contenido de la tarjeta.
+    <template #footer>
+      <Button size="sm">Ver más</Button>
+    </template>
+  </Card>
+</template>
+```
+
+| Prop      | Tipo                                   | Default      | Descripción                                         |
+| --------- | -------------------------------------- | ------------ | --------------------------------------------------- |
+| `variant` | `'elevated' \| 'outlined' \| 'filled'` | `'elevated'` | Sombra, borde o fondo secundario.                   |
+| `padding` | `'none' \| 'sm' \| 'md' \| 'lg'`       | `'md'`       | Padding de header, body y footer.                   |
+| `title`   | `string`                               | —            | Título de conveniencia; lo ignora el slot `header`. |
+
+| Slot      | Descripción                       |
+| --------- | --------------------------------- |
+| `default` | Cuerpo de la tarjeta.             |
+| `header`  | Cabecera; sustituye a `title`.    |
+| `footer`  | Pie; solo se renderiza si se usa. |
+
+## `Alert`
+
+Mensaje contextual con icono, título y cierre opcional.
+
+```vue
+<template>
+  <Alert variant="success" title="Guardado" closable @close="onClose">
+    Los cambios se guardaron correctamente.
+  </Alert>
+</template>
+```
+
+| Prop       | Tipo                                           | Default  | Descripción                      |
+| ---------- | ---------------------------------------------- | -------- | -------------------------------- |
+| `variant`  | `'info' \| 'success' \| 'warning' \| 'danger'` | `'info'` | Color e icono por defecto.       |
+| `title`    | `string`                                       | —        | Título en negrita.               |
+| `closable` | `boolean`                                      | `false`  | Muestra el botón de cierre.      |
+| `hideIcon` | `boolean`                                      | `false`  | Oculta el icono de la izquierda. |
+
+| Evento  | Payload | Descripción                                         |
+| ------- | ------- | --------------------------------------------------- |
+| `close` | —       | Al pulsar el cierre; el aviso se oculta a sí mismo. |
+
+| Slot      | Descripción                     |
+| --------- | ------------------------------- |
+| `default` | Contenido del mensaje.          |
+| `icon`    | Sustituye el icono por defecto. |
+
+## `Tag`
+
+Etiqueta compacta para estados, categorías o filtros.
+
+```vue
+<template>
+  <Tag variant="success" dot>Activo</Tag>
+  <Tag variant="danger" closable @close="remove">Borrador</Tag>
+</template>
+```
+
+| Prop         | Tipo                                                                    | Default     | Descripción                       |
+| ------------ | ----------------------------------------------------------------------- | ----------- | --------------------------------- |
+| `variant`    | `'neutral' \| 'accent' \| 'success' \| 'warning' \| 'danger' \| 'info'` | `'neutral'` | Color del tag.                    |
+| `size`       | `'sm' \| 'md' \| 'lg'`                                                  | `'md'`      | Tamaño.                           |
+| `appearance` | `'soft' \| 'outline' \| 'solid'`                                        | `'soft'`    | Relleno suave, contorno o sólido. |
+| `closable`   | `boolean`                                                               | `false`     | Muestra el botón para quitarlo.   |
+| `dot`        | `boolean`                                                               | `false`     | Punto de color al inicio.         |
+
+| Evento  | Payload | Descripción                   |
+| ------- | ------- | ----------------------------- |
+| `close` | —       | Al pulsar el botón de quitar. |
+
+| Slot      | Descripción            |
+| --------- | ---------------------- |
+| `default` | Texto del tag.         |
+| `icon`    | Icono antes del texto. |
 
 ## `ThemeSwitcher`
 

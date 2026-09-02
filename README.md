@@ -1,6 +1,6 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Card`, `Alert`, `Tag`, `ThemeSwitcher`; en camino: `Sidebar`, `Select`, `Dialog`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Card`, `Alert`, `Tag`, `ThemeSwitcher`; en camino: `Sidebar`, `Dialog`, `Radio`, …
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton>, <GmzInput>, <GmzCard>, <GmzAlert>, <GmzTag>, <GmzThemeSwitcher>…
+// <GmzButton>, <GmzInput>, <GmzSelect>, <GmzCheckbox>, <GmzSwitch>, <GmzCard>, <GmzAlert>…
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -189,6 +189,138 @@ Etiqueta compacta para estados, categorías o filtros.
 | --------- | ---------------------- |
 | `default` | Texto del tag.         |
 | `icon`    | Icono antes del texto. |
+
+## `Checkbox`
+
+Casilla con label, estado indeterminado y validación. Soporta `v-model` (`boolean`).
+
+```vue
+<template>
+  <Checkbox v-model="acepta" label="Acepto los términos" required />
+</template>
+```
+
+| Prop            | Tipo                   | Default | Descripción                                  |
+| --------------- | ---------------------- | ------- | -------------------------------------------- |
+| `modelValue`    | `boolean`              | `false` | Estado marcado (`v-model`).                  |
+| `label`         | `string`               | —       | Texto junto a la casilla (o usa el slot).    |
+| `hint`          | `string`               | —       | Texto de ayuda; se oculta si hay `error`.    |
+| `error`         | `string`               | —       | Mensaje de error; marca el control inválido. |
+| `size`          | `'sm' \| 'md' \| 'lg'` | `'md'`  | Tamaño.                                      |
+| `disabled`      | `boolean`              | `false` | Deshabilita el control.                      |
+| `required`      | `boolean`              | `false` | Marca el control como obligatorio.           |
+| `indeterminate` | `boolean`              | `false` | Estado indeterminado (visual y en el DOM).   |
+| `id`            | `string`               | auto    | `id` del `<input>`.                          |
+
+| Evento              | Payload   | Descripción           |
+| ------------------- | --------- | --------------------- |
+| `update:modelValue` | `boolean` | Al cambiar el estado. |
+
+| Slot      | Descripción                      |
+| --------- | -------------------------------- |
+| `default` | Contenido del label (o `label`). |
+
+## `Switch`
+
+Interruptor on/off. Mismas props que `Checkbox` salvo `indeterminate`. Soporta `v-model`
+(`boolean`) y expone `role="switch"`.
+
+```vue
+<template>
+  <Switch v-model="notificar" label="Recibir notificaciones" />
+</template>
+```
+
+| Prop         | Tipo                   | Default | Descripción                   |
+| ------------ | ---------------------- | ------- | ----------------------------- |
+| `modelValue` | `boolean`              | `false` | Estado activado (`v-model`).  |
+| `label`      | `string`               | —       | Texto junto al interruptor.   |
+| `hint`       | `string`               | —       | Texto de ayuda.               |
+| `error`      | `string`               | —       | Mensaje de error.             |
+| `size`       | `'sm' \| 'md' \| 'lg'` | `'md'`  | Tamaño.                       |
+| `disabled`   | `boolean`              | `false` | Deshabilita el control.       |
+| `required`   | `boolean`              | `false` | Marca el control obligatorio. |
+| `id`         | `string`               | auto    | `id` del `<input>`.           |
+
+| Evento              | Payload   | Descripción  |
+| ------------------- | --------- | ------------ |
+| `update:modelValue` | `boolean` | Al alternar. |
+
+## `Textarea`
+
+Área de texto multilínea con label, ayuda y error. Soporta `v-model`.
+
+```vue
+<template>
+  <Textarea v-model="bio" label="Biografía" :rows="4" />
+</template>
+```
+
+| Prop          | Tipo                             | Default      | Descripción                                |
+| ------------- | -------------------------------- | ------------ | ------------------------------------------ |
+| `modelValue`  | `string`                         | —            | Valor del campo (`v-model`).               |
+| `label`       | `string`                         | —            | Etiqueta visible.                          |
+| `placeholder` | `string`                         | —            | Placeholder.                               |
+| `hint`        | `string`                         | —            | Texto de ayuda; se oculta si hay `error`.  |
+| `error`       | `string`                         | —            | Mensaje de error; marca el campo inválido. |
+| `size`        | `'sm' \| 'md' \| 'lg'`           | `'md'`       | Tamaño.                                    |
+| `rows`        | `number`                         | `3`          | Filas visibles.                            |
+| `resize`      | `'none' \| 'vertical' \| 'both'` | `'vertical'` | Dirección de redimensionado.               |
+| `disabled`    | `boolean`                        | `false`      | Deshabilita el campo.                      |
+| `readonly`    | `boolean`                        | `false`      | Solo lectura.                              |
+| `required`    | `boolean`                        | `false`      | Marca el campo como obligatorio.           |
+| `id`          | `string`                         | auto         | `id` del `<textarea>`.                     |
+
+| Evento              | Payload      | Descripción                    |
+| ------------------- | ------------ | ------------------------------ |
+| `update:modelValue` | `string`     | Al escribir.                   |
+| `focus` / `blur`    | `FocusEvent` | Passthrough del evento nativo. |
+
+## `Select`
+
+Desplegable sobre `<select>` nativo. Acepta opciones como strings/números u objetos
+`{ label, value, disabled }`. Soporta `v-model` (`string | number`) y conserva el tipo
+original del valor al emitir.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Select } from 'gomez-ui'
+
+const country = ref('')
+const options = [
+  { label: 'España', value: 'es' },
+  { label: 'México', value: 'mx' },
+]
+</script>
+
+<template>
+  <Select
+    v-model="country"
+    label="País"
+    placeholder="Elige…"
+    :options="options"
+  />
+</template>
+```
+
+| Prop          | Tipo                                                  | Default | Descripción                                |
+| ------------- | ----------------------------------------------------- | ------- | ------------------------------------------ |
+| `modelValue`  | `string \| number`                                    | —       | Valor seleccionado (`v-model`).            |
+| `options`     | `(string \| number \| { label; value; disabled? })[]` | `[]`    | Opciones del desplegable.                  |
+| `label`       | `string`                                              | —       | Etiqueta visible.                          |
+| `placeholder` | `string`                                              | —       | Texto cuando no hay selección.             |
+| `hint`        | `string`                                              | —       | Texto de ayuda; se oculta si hay `error`.  |
+| `error`       | `string`                                              | —       | Mensaje de error; marca el campo inválido. |
+| `size`        | `'sm' \| 'md' \| 'lg'`                                | `'md'`  | Tamaño.                                    |
+| `disabled`    | `boolean`                                             | `false` | Deshabilita el campo.                      |
+| `required`    | `boolean`                                             | `false` | Marca el campo como obligatorio.           |
+| `id`          | `string`                                              | auto    | `id` del `<select>`.                       |
+
+| Evento              | Payload            | Descripción                          |
+| ------------------- | ------------------ | ------------------------------------ |
+| `update:modelValue` | `string \| number` | Al elegir una opción.                |
+| `change`            | `string \| number` | Igual que arriba, para conveniencia. |
 
 ## `ThemeSwitcher`
 

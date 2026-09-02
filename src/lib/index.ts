@@ -5,8 +5,23 @@ import { Input } from './components/Input'
 import { Card } from './components/Card'
 import { Alert } from './components/Alert'
 import { Tag } from './components/Tag'
+import { Checkbox } from './components/Checkbox'
+import { Switch } from './components/Switch'
+import { Textarea } from './components/Textarea'
+import { Select } from './components/Select'
 
-export { Button, ThemeSwitcher, Input, Card, Alert, Tag }
+export {
+  Button,
+  ThemeSwitcher,
+  Input,
+  Card,
+  Alert,
+  Tag,
+  Checkbox,
+  Switch,
+  Textarea,
+  Select,
+}
 export { useColorMode } from './composables/useColorMode'
 export type { ColorMode, ResolvedColorMode } from './composables/useColorMode'
 export type {
@@ -25,6 +40,13 @@ export type {
   TagProps,
   TagVariant,
   TagAppearance,
+  CheckboxProps,
+  SwitchProps,
+  TextareaProps,
+  TextareaResize,
+  SelectProps,
+  SelectOption,
+  SelectOptionObject,
 } from './types'
 
 export interface GomezUIOptions {
@@ -45,6 +67,10 @@ const GomezUI: Plugin<[GomezUIOptions?]> = {
     app.component(`${prefix}Card`, Card)
     app.component(`${prefix}Alert`, Alert)
     app.component(`${prefix}Tag`, Tag)
+    app.component(`${prefix}Checkbox`, Checkbox)
+    app.component(`${prefix}Switch`, Switch)
+    app.component(`${prefix}Textarea`, Textarea)
+    app.component(`${prefix}Select`, Select)
   },
 }
 

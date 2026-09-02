@@ -4,8 +4,12 @@ import {
   Alert,
   Button,
   Card,
+  Checkbox,
   Input,
+  Select,
+  Switch,
   Tag,
+  Textarea,
   ThemeSwitcher,
   useColorMode,
 } from './lib'
@@ -25,6 +29,16 @@ const tagVariants: TagVariant[] = [
 const { mode, resolved } = useColorMode()
 const clicks = ref(0)
 const email = ref('')
+const bio = ref('')
+const terms = ref(false)
+const notify = ref(true)
+const country = ref('')
+const countries = [
+  { label: 'España', value: 'es' },
+  { label: 'México', value: 'mx' },
+  { label: 'Colombia', value: 'co' },
+  { label: 'Argentina', value: 'ar' },
+]
 </script>
 
 <template>
@@ -165,6 +179,59 @@ const email = ref('')
         <Tag size="sm">sm</Tag>
         <Tag size="lg">lg</Tag>
       </div>
+    </section>
+
+    <section>
+      <h2>Checkbox &amp; Switch</h2>
+      <div class="grid">
+        <Checkbox v-model="terms" label="Acepto los términos" required />
+        <Checkbox :indeterminate="true" label="Selección parcial" />
+        <Checkbox label="Deshabilitado" disabled />
+        <Switch v-model="notify" label="Recibir notificaciones" />
+        <Switch label="Modo beta" hint="Funciones experimentales." />
+        <Switch label="Bloqueado" disabled />
+      </div>
+      <p class="hint">
+        terms: <code>{{ terms }}</code> · notify: <code>{{ notify }}</code>
+      </p>
+    </section>
+
+    <section>
+      <h2>Textarea</h2>
+      <Textarea
+        v-model="bio"
+        label="Biografía"
+        placeholder="Cuéntanos algo sobre ti…"
+        hint="Máximo unas pocas líneas."
+        :rows="4"
+      />
+      <p class="hint">
+        Longitud: <code>{{ bio.length }}</code>
+      </p>
+    </section>
+
+    <section>
+      <h2>Select</h2>
+      <div class="grid">
+        <Select
+          v-model="country"
+          label="País"
+          placeholder="Elige un país…"
+          :options="countries"
+        />
+        <div class="row">
+          <Select size="sm" :options="['sm', 'md', 'lg']" model-value="sm" />
+          <Select size="lg" :options="['sm', 'md', 'lg']" model-value="lg" />
+        </div>
+        <Select
+          label="Con error"
+          :options="countries"
+          error="Selecciona un país."
+        />
+      </div>
+      <p class="hint">
+        Valor: <code>{{ country || '—' }}</code>
+      </p>
     </section>
 
     <footer>Clicks registrados: {{ clicks }}</footer>

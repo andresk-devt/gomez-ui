@@ -524,3 +524,81 @@ export interface ToastContainerProps {
   /** Máximo de toasts visibles a la vez (se muestran los más recientes). */
   max?: number
 }
+
+export interface SidebarItem {
+  /** Texto visible. */
+  label: string
+  /** Valor único; su coincidencia con `modelValue` marca el item activo. */
+  value?: string | number
+  /** Enlace; si se define, el item se renderiza como `<a>`. */
+  href?: string
+  /** Deshabilita el item. */
+  disabled?: boolean
+  /** Contador o etiqueta a la derecha. */
+  badge?: string | number
+  /** Subitems; convierten el item en un grupo plegable. */
+  children?: SidebarItem[]
+}
+
+export interface SidebarProps {
+  /** Árbol de navegación (1 nivel de anidamiento). */
+  items?: SidebarItem[]
+  /** Valor del item activo (`v-model`). */
+  modelValue?: string | number
+  /** Modo raíl: solo iconos (`v-model:collapsed`). */
+  collapsed?: boolean
+  /** Título en la cabecera. */
+  title?: string
+  /** `aria-label` del `<nav>`. */
+  ariaLabel?: string
+}
+
+export type TableAlign = 'left' | 'center' | 'right'
+export type TableSortOrder = 'asc' | 'desc'
+
+export interface TableColumn {
+  /** Clave del campo en cada fila. */
+  key: string
+  /** Encabezado visible; por defecto la `key`. */
+  label?: string
+  /** Alineación del contenido. */
+  align?: TableAlign
+  /** Ancho de la columna (`number` = píxeles). */
+  width?: string | number
+  /** Habilita la ordenación por esta columna. */
+  sortable?: boolean
+}
+
+export interface TableSort {
+  key: string
+  order: TableSortOrder
+}
+
+export type TableRow = Record<string, unknown>
+
+export interface TableProps {
+  /** Definición de columnas. */
+  columns?: TableColumn[]
+  /** Filas de datos. */
+  rows?: TableRow[]
+  /** Campo o función para la `key` de cada fila. */
+  rowKey?: string | ((row: TableRow, index: number) => string | number)
+  /** Orden actual (`v-model:sort`). */
+  sort?: TableSort | null
+  /** No ordenar internamente (ordenación gestionada por el padre). */
+  manualSort?: boolean
+  /** Muestra filas de carga (skeleton). */
+  loading?: boolean
+  /** Nº de filas skeleton mientras `loading`. */
+  loadingRows?: number
+  /** Texto cuando no hay filas. */
+  emptyText?: string
+  /** Tamaño (densidad). */
+  size?: Size
+  /** Filas alternas con fondo. */
+  striped?: boolean
+  /** Resalta la fila al pasar el ratón. */
+  hoverable?: boolean
+  /** Cabecera fija al hacer scroll vertical. */
+  stickyHeader?: boolean
+}

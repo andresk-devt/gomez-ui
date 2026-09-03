@@ -18,9 +18,11 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Sidebar,
   Skeleton,
   Spinner,
   Switch,
+  Table,
   Tabs,
   Tag,
   Textarea,
@@ -30,7 +32,15 @@ import {
   useColorMode,
   useToast,
 } from './lib'
-import type { ButtonSize, ButtonVariant, DropdownItem, TagVariant } from './lib'
+import type {
+  ButtonSize,
+  ButtonVariant,
+  DropdownItem,
+  SidebarItem,
+  TableColumn,
+  TableSort,
+  TagVariant,
+} from './lib'
 
 const variants: ButtonVariant[] = ['primary', 'secondary', 'ghost', 'danger']
 const sizes: ButtonSize[] = ['sm', 'md', 'lg']
@@ -72,6 +82,34 @@ const progress = ref(45)
 const drawerOpen = ref(false)
 const currentPage = ref(1)
 const { toast } = useToast()
+
+const navValue = ref('dashboard')
+const navCollapsed = ref(false)
+const navItems: SidebarItem[] = [
+  { label: 'Panel', value: 'dashboard' },
+  { label: 'Pedidos', value: 'orders', badge: 12 },
+  {
+    label: 'Catálogo',
+    value: 'catalog',
+    children: [
+      { label: 'Productos', value: 'products' },
+      { label: 'Categorías', value: 'categories' },
+    ],
+  },
+  { label: 'Informes', value: 'reports', disabled: true },
+]
+
+const tableColumns: TableColumn[] = [
+  { key: 'name', label: 'Nombre', sortable: true },
+  { key: 'role', label: 'Rol' },
+  { key: 'score', label: 'Puntos', sortable: true, align: 'right' },
+]
+const tableRows = [
+  { id: 1, name: 'Ana Ruiz', role: 'Admin', score: 92 },
+  { id: 2, name: 'Carlos Vega', role: 'Editor', score: 78 },
+  { id: 3, name: 'Beatriz Sol', role: 'Viewer', score: 63 },
+]
+const tableSort = ref<TableSort | null>({ key: 'score', order: 'desc' })
 </script>
 
 <template>
@@ -502,6 +540,47 @@ const { toast } = useToast()
           Persistente
         </Button>
       </div>
+    </section>
+
+    <section>
+      <h2>Sidebar</h2>
+      <div class="row">
+        <Button size="sm" @click="navCollapsed = !navCollapsed">
+          {{ navCollapsed ? 'Expandir' : 'Colapsar' }}
+        </Button>
+      </div>
+      <div class="sidebar-demo">
+        <Sidebar
+          v-model="navValue"
+          v-model:collapsed="navCollapsed"
+          :items="navItems"
+          title="Tienda"
+        />
+      </div>
+      <p class="hint">
+        Activo: <code>{{ navValue }}</code>
+      </p>
+    </section>
+
+    <section>
+      <h2>Table</h2>
+      <Table
+        v-model:sort="tableSort"
+        :columns="tableColumns"
+        :rows="tableRows"
+        striped
+        hoverable
+      >
+        <template #cell-score="{ value }">
+          <strong>{{ value }}</strong>
+        </template>
+      </Table>
+      <p class="hint">
+        Orden:
+        <code>{{
+          tableSort ? `${tableSort.key} ${tableSort.order}` : '—'
+        }}</code>
+      </p>
     </section>
 
     <footer>Clicks registrados: {{ clicks }}</footer>

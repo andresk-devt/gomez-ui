@@ -10,8 +10,10 @@ import {
   Card,
   Checkbox,
   Dialog,
+  Drawer,
   Dropdown,
   Input,
+  Pagination,
   Progress,
   Radio,
   RadioGroup,
@@ -23,8 +25,10 @@ import {
   Tag,
   Textarea,
   ThemeSwitcher,
+  ToastContainer,
   Tooltip,
   useColorMode,
+  useToast,
 } from './lib'
 import type { ButtonSize, ButtonVariant, DropdownItem, TagVariant } from './lib'
 
@@ -65,6 +69,9 @@ const menuItems: DropdownItem[] = [
 const activeTab = ref('cuenta')
 const openPanels = ref<string[]>(['envios'])
 const progress = ref(45)
+const drawerOpen = ref(false)
+const currentPage = ref(1)
+const { toast } = useToast()
 </script>
 
 <template>
@@ -454,6 +461,51 @@ const progress = ref(45)
       <Skeleton variant="rect" :height="80" />
     </section>
 
+    <section>
+      <h2>Drawer</h2>
+      <div class="row">
+        <Button @click="drawerOpen = true">Abrir drawer</Button>
+      </div>
+      <Drawer v-model="drawerOpen" side="right" title="Filtros" size="360px">
+        <p>Contenido del panel lateral con foco atrapado y scroll bloqueado.</p>
+        <template #footer="{ close }">
+          <Button variant="ghost" @click="close">Cerrar</Button>
+          <Button @click="close">Aplicar</Button>
+        </template>
+      </Drawer>
+    </section>
+
+    <section>
+      <h2>Pagination</h2>
+      <Pagination v-model:page="currentPage" :total="238" :page-size="10" />
+      <p class="hint">
+        Página: <code>{{ currentPage }}</code>
+      </p>
+    </section>
+
+    <section>
+      <h2>Toast</h2>
+      <div class="row">
+        <Button @click="toast.success('Cambios guardados')">Success</Button>
+        <Button
+          variant="secondary"
+          @click="toast({ title: 'Sin conexión', message: 'Reintentando…' })"
+        >
+          Con título
+        </Button>
+        <Button
+          variant="danger"
+          @click="
+            toast({ message: 'Algo falló', variant: 'danger', duration: 0 })
+          "
+        >
+          Persistente
+        </Button>
+      </div>
+    </section>
+
     <footer>Clicks registrados: {{ clicks }}</footer>
   </main>
+
+  <ToastContainer placement="bottom-end" />
 </template>

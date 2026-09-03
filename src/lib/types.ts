@@ -457,3 +457,70 @@ export interface BreadcrumbProps {
   /** Separador entre items. */
   separator?: string
 }
+
+export type DrawerSide = 'left' | 'right' | 'top' | 'bottom'
+
+export interface DrawerProps {
+  /** Estado abierto (`v-model`). */
+  modelValue?: boolean
+  /** Borde desde el que aparece el panel. */
+  side?: DrawerSide
+  /** Título del panel (usado como `aria-labelledby`). */
+  title?: string
+  /** Ancho (left/right) o alto (top/bottom) del panel. `number` = píxeles. */
+  size?: string | number
+  /** Muestra el botón de cerrar y habilita el cierre por overlay/Escape. */
+  closable?: boolean
+  /** Cerrar al hacer clic en el overlay. */
+  closeOnOverlay?: boolean
+  /** Cerrar al pulsar Escape. */
+  closeOnEsc?: boolean
+}
+
+export interface PaginationProps {
+  /** Página actual, 1-based (`v-model:page`). */
+  page?: number
+  /** Nº total de elementos (con `pageSize` calcula las páginas). */
+  total?: number
+  /** Elementos por página. */
+  pageSize?: number
+  /** Nº de páginas explícito; tiene prioridad sobre `total`/`pageSize`. */
+  pageCount?: number
+  /** Páginas mostradas a cada lado de la actual. */
+  siblingCount?: number
+  /** Tamaño. */
+  size?: Size
+  /** Deshabilita toda la interacción. */
+  disabled?: boolean
+}
+
+export type ToastVariant = 'info' | 'success' | 'warning' | 'danger'
+
+export interface ToastOptions {
+  /** Cuerpo del mensaje. */
+  message: string
+  /** Título en negrita opcional. */
+  title?: string
+  /** Color/rol; por defecto según el helper usado. */
+  variant?: ToastVariant
+  /** Milisegundos hasta el auto-cierre; `0` = permanente. */
+  duration?: number
+}
+
+export interface ToastRecord {
+  id: string
+  message: string
+  title?: string
+  variant: ToastVariant
+  duration: number
+}
+
+export type ToastPlacement =
+  'top-end' | 'top-start' | 'bottom-end' | 'bottom-start'
+
+export interface ToastContainerProps {
+  /** Esquina donde se apilan los toasts. */
+  placement?: ToastPlacement
+  /** Máximo de toasts visibles a la vez (se muestran los más recientes). */
+  max?: number
+}

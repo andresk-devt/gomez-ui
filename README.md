@@ -1,6 +1,6 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `Dialog`, `Dropdown`, `Tabs`, `Accordion`, `Progress`, `Skeleton`, `Breadcrumb`, `ThemeSwitcher`; en camino: `Sidebar`, `Toast`, `Table`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `Dialog`, `Drawer`, `Dropdown`, `Tabs`, `Accordion`, `Progress`, `Skeleton`, `Breadcrumb`, `Pagination`, `ToastContainer`, `ThemeSwitcher`; en camino: `Sidebar`, `Table`, …
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton>, <GmzInput>, <GmzTabs>, <GmzAccordion>, <GmzDialog>, <GmzDropdown>…
+// <GmzButton>, <GmzInput>, <GmzDialog>, <GmzDrawer>, <GmzPagination>, <GmzToastContainer>…
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -704,6 +704,105 @@ actual (`aria-current="page"`). Items con `href` → enlace; sin `href` → bot�
 | Slot        | Descripción              |
 | ----------- | ------------------------ |
 | `separator` | Separador personalizado. |
+
+## `Drawer`
+
+Panel lateral con la misma mecánica que `Dialog` (foco atrapado, foco devuelto, bloqueo de
+scroll, `Teleport`, cierre por overlay/Escape), deslizándose desde un borde. Controlado con
+`v-model`.
+
+```vue
+<template>
+  <Drawer v-model="open" side="right" title="Filtros" size="360px">
+    Contenido…
+    <template #footer="{ close }">
+      <Button variant="ghost" @click="close">Cerrar</Button>
+      <Button @click="close">Aplicar</Button>
+    </template>
+  </Drawer>
+</template>
+```
+
+| Prop             | Tipo                                     | Default   | Descripción                                            |
+| ---------------- | ---------------------------------------- | --------- | ------------------------------------------------------ |
+| `modelValue`     | `boolean`                                | `false`   | Estado abierto (`v-model`).                            |
+| `side`           | `'left' \| 'right' \| 'top' \| 'bottom'` | `'right'` | Borde desde el que aparece.                            |
+| `title`          | `string`                                 | —         | Título; se usa como `aria-labelledby`.                 |
+| `size`           | `string \| number`                       | —         | Ancho (left/right) o alto (top/bottom). `number` = px. |
+| `closable`       | `boolean`                                | `true`    | Botón de cerrar + cierre por overlay/Escape.           |
+| `closeOnOverlay` | `boolean`                                | `true`    | Cerrar al hacer clic en el overlay.                    |
+| `closeOnEsc`     | `boolean`                                | `true`    | Cerrar al pulsar Escape.                               |
+
+Eventos `update:modelValue` / `open` / `close` y slots `default` / `header` / `footer`
+(`footer` recibe `{ close }`), igual que `Dialog`.
+
+## `Pagination`
+
+```vue
+<template>
+  <Pagination v-model:page="page" :total="238" :page-size="10" />
+</template>
+```
+
+| Prop           | Tipo                   | Default | Descripción                                       |
+| -------------- | ---------------------- | ------- | ------------------------------------------------- |
+| `page`         | `number`               | `1`     | Página actual, 1-based (`v-model:page`).          |
+| `total`        | `number`               | —       | Nº total de elementos (con `pageSize`).           |
+| `pageSize`     | `number`               | `10`    | Elementos por página.                             |
+| `pageCount`    | `number`               | —       | Nº de páginas explícito; prevalece sobre `total`. |
+| `siblingCount` | `number`               | `1`     | Páginas a cada lado de la actual.                 |
+| `size`         | `'sm' \| 'md' \| 'lg'` | `'md'`  | Tamaño.                                           |
+| `disabled`     | `boolean`              | `false` | Deshabilita toda la interacción.                  |
+
+| Evento        | Payload  | Descripción                                          |
+| ------------- | -------- | ---------------------------------------------------- |
+| `update:page` | `number` | Al cambiar de página (recortado a `[1, pageCount]`). |
+
+## `ToastContainer` + `useToast`
+
+Notificaciones imperativas. Monta `<ToastContainer />` una vez en la raíz de la app y lanza
+toasts desde cualquier sitio con `useToast()`.
+
+```vue
+<script setup lang="ts">
+import { ToastContainer, useToast } from 'gomez-ui'
+
+const { toast } = useToast()
+</script>
+
+<template>
+  <button @click="toast.success('Guardado')">Guardar</button>
+  <ToastContainer placement="bottom-end" />
+</template>
+```
+
+```ts
+const { toast, dismiss, clear, toasts } = useToast()
+
+toast('Mensaje simple') // variante info
+toast.success('Hecho')
+toast.error('Falló')
+toast.warning('Cuidado')
+toast({ title: 'Sin conexión', message: 'Reintentando…', duration: 0 }) // 0 = permanente
+```
+
+`toast(...)` devuelve el `id`; `dismiss(id)` cierra uno y `clear()` todos. Cada toast usa
+`role="alert"` (variante `danger`) o `role="status"` (resto).
+
+**`ToastContainer`**
+
+| Prop        | Tipo                                                         | Default     | Descripción                                 |
+| ----------- | ------------------------------------------------------------ | ----------- | ------------------------------------------- |
+| `placement` | `'top-end' \| 'top-start' \| 'bottom-end' \| 'bottom-start'` | `'top-end'` | Esquina donde se apilan.                    |
+| `max`       | `number`                                                     | `5`         | Máximo visible (muestra los más recientes). |
+
+**`ToastOptions`**: `{ message: string; title?: string; variant?: 'info' \| 'success' \| 'warning' \| 'danger'; duration?: number }`.
+
+## Composables auxiliares
+
+Además de `useColorMode` y `useToast`, se exportan `useScrollLock()` (bloqueo del scroll del
+`body` con recuento) y `useFocusTrap(containerRef)` (atrapar/devolver el foco) para construir
+overlays propios.
 
 ## `ThemeSwitcher`
 

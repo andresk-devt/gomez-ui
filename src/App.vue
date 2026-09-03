@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import {
+  Accordion,
   Alert,
   Avatar,
   Badge,
+  Breadcrumb,
   Button,
   Card,
   Checkbox,
   Dialog,
   Dropdown,
   Input,
+  Progress,
   Radio,
   RadioGroup,
   Select,
+  Skeleton,
   Spinner,
   Switch,
+  Tabs,
   Tag,
   Textarea,
   ThemeSwitcher,
@@ -57,6 +62,9 @@ const menuItems: DropdownItem[] = [
   { divider: true },
   { label: 'Borrar', value: 'delete', danger: true },
 ]
+const activeTab = ref('cuenta')
+const openPanels = ref<string[]>(['envios'])
+const progress = ref(45)
 </script>
 
 <template>
@@ -373,6 +381,77 @@ const menuItems: DropdownItem[] = [
           </Button>
         </template>
       </Dialog>
+    </section>
+
+    <section>
+      <h2>Breadcrumb</h2>
+      <Breadcrumb
+        :items="[
+          { label: 'Inicio', href: '#' },
+          { label: 'Ajustes', href: '#' },
+          { label: 'Perfil' },
+        ]"
+      />
+    </section>
+
+    <section>
+      <h2>Tabs</h2>
+      <Tabs
+        v-model="activeTab"
+        :items="[
+          { label: 'Cuenta', value: 'cuenta' },
+          { label: 'Notificaciones', value: 'notif' },
+          { label: 'Facturación', value: 'billing', disabled: true },
+        ]"
+      >
+        <template #cuenta>Datos de la cuenta y perfil público.</template>
+        <template #notif>Preferencias de correo y push.</template>
+      </Tabs>
+    </section>
+
+    <section>
+      <h2>Accordion</h2>
+      <Accordion
+        v-model="openPanels"
+        multiple
+        :items="[
+          { label: 'Envíos', value: 'envios' },
+          { label: 'Devoluciones', value: 'devol' },
+          { label: 'Garantía', value: 'garantia' },
+        ]"
+      >
+        <template #envios>Entrega en 24-48h en península.</template>
+        <template #devol>30 días para devolver sin coste.</template>
+        <template #garantia>2 años de garantía legal.</template>
+      </Accordion>
+    </section>
+
+    <section>
+      <h2>Progress</h2>
+      <div class="grid">
+        <Progress :value="progress" show-value label="Subida" />
+        <Progress :value="80" variant="success" size="lg" />
+        <Progress variant="warning" />
+        <div class="row">
+          <Button size="sm" @click="progress = Math.max(0, progress - 10)">
+            −10
+          </Button>
+          <Button size="sm" @click="progress = Math.min(100, progress + 10)">
+            +10
+          </Button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Skeleton</h2>
+      <div class="row" style="align-items: flex-start">
+        <Skeleton variant="circle" :width="48" :height="48" />
+        <div style="flex: 1">
+          <Skeleton :lines="3" />
+        </div>
+      </div>
+      <Skeleton variant="rect" :height="80" />
     </section>
 
     <footer>Clicks registrados: {{ clicks }}</footer>

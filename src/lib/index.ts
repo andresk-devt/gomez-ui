@@ -25,6 +25,8 @@ import { Breadcrumb } from './components/Breadcrumb'
 import { Drawer } from './components/Drawer'
 import { Pagination } from './components/Pagination'
 import { ToastContainer } from './components/ToastContainer'
+import { Sidebar } from './components/Sidebar'
+import { Table } from './components/Table'
 
 export {
   Button,
@@ -53,6 +55,8 @@ export {
   Drawer,
   Pagination,
   ToastContainer,
+  Sidebar,
+  Table,
 }
 export { useColorMode } from './composables/useColorMode'
 export type { ColorMode, ResolvedColorMode } from './composables/useColorMode'
@@ -123,6 +127,14 @@ export type {
   ToastRecord,
   ToastVariant,
   ToastPlacement,
+  SidebarProps,
+  SidebarItem,
+  TableProps,
+  TableColumn,
+  TableRow,
+  TableSort,
+  TableAlign,
+  TableSortOrder,
 } from './types'
 
 export interface GomezUIOptions {
@@ -163,6 +175,8 @@ const GomezUI: Plugin<[GomezUIOptions?]> = {
     app.component(`${prefix}Drawer`, Drawer)
     app.component(`${prefix}Pagination`, Pagination)
     app.component(`${prefix}ToastContainer`, ToastContainer)
+    app.component(`${prefix}Sidebar`, Sidebar)
+    app.component(`${prefix}Table`, Table)
   },
 }
 

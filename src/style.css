@@ -66,6 +66,13 @@ body {
   color: var(--gmz-color-fg-muted, #6b6375);
 }
 
+.sidebar-demo {
+  height: 320px;
+  overflow: hidden;
+  border: 1px solid var(--gmz-color-border, #e5e4e7);
+  border-radius: 10px;
+}
+
 .grid {
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 # gomez-ui
 
-Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `Dialog`, `Drawer`, `Dropdown`, `Tabs`, `Accordion`, `Progress`, `Skeleton`, `Breadcrumb`, `Pagination`, `ToastContainer`, `ThemeSwitcher`; en camino: `Sidebar`, `Table`, …
+Librería de componentes para **Vue 3**. Componentes: `Button`, `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `Radio`/`RadioGroup`, `Card`, `Alert`, `Tag`, `Badge`, `Avatar`, `Spinner`, `Tooltip`, `Dialog`, `Drawer`, `Dropdown`, `Tabs`, `Accordion`, `Progress`, `Skeleton`, `Breadcrumb`, `Pagination`, `Sidebar`, `Table`, `ToastContainer`, `ThemeSwitcher`.
 
 - Tipos incluidos (`.d.ts`).
 - Estilos **auto-inyectados**: no hace falta importar ningún CSS.
@@ -35,7 +35,7 @@ import GomezUI from 'gomez-ui'
 import App from './App.vue'
 
 createApp(App).use(GomezUI).mount('#app')
-// <GmzButton>, <GmzInput>, <GmzDialog>, <GmzDrawer>, <GmzPagination>, <GmzToastContainer>…
+// <GmzButton>, <GmzInput>, <GmzSidebar>, <GmzTable>, <GmzDialog>, <GmzToastContainer>…
 // Prefijo personalizable: app.use(GomezUI, { prefix: 'G' }) -> <GButton>
 ```
 
@@ -797,6 +797,115 @@ toast({ title: 'Sin conexión', message: 'Reintentando…', duration: 0 }) // 0 
 | `max`       | `number`                                                     | `5`         | Máximo visible (muestra los más recientes). |
 
 **`ToastOptions`**: `{ message: string; title?: string; variant?: 'info' \| 'success' \| 'warning' \| 'danger'; duration?: number }`.
+
+## `Sidebar`
+
+Navegación lateral con un nivel de grupos plegables y modo raíl. `v-model` para el item
+activo, `v-model:collapsed` para el raíl.
+
+```vue
+<template>
+  <Sidebar
+    v-model="active"
+    v-model:collapsed="collapsed"
+    title="Tienda"
+    :items="[
+      { label: 'Panel', value: 'dashboard' },
+      { label: 'Pedidos', value: 'orders', badge: 12 },
+      {
+        label: 'Catálogo',
+        value: 'catalog',
+        children: [
+          { label: 'Productos', value: 'products' },
+          { label: 'Categorías', value: 'categories' },
+        ],
+      },
+    ]"
+  >
+    <template #icon="{ item, active }">
+      <MyIcon :name="item.value" :filled="active" />
+    </template>
+  </Sidebar>
+</template>
+```
+
+| Prop         | Tipo               | Default        | Descripción                                   |
+| ------------ | ------------------ | -------------- | --------------------------------------------- |
+| `items`      | `SidebarItem[]`    | `[]`           | Árbol de navegación (1 nivel de anidamiento). |
+| `modelValue` | `string \| number` | —              | Item activo (`v-model`).                      |
+| `collapsed`  | `boolean`          | `false`        | Modo raíl, solo iconos (`v-model:collapsed`). |
+| `title`      | `string`           | —              | Título de la cabecera.                        |
+| `ariaLabel`  | `string`           | `'Navegación'` | `aria-label` del `<nav>`.                     |
+
+`SidebarItem`: `{ label; value?; href?; disabled?; badge?; children? }`. Con `href` el item
+es un `<a>`; el item activo lleva `aria-current="page"`.
+
+| Evento              | Payload            | Descripción                    |
+| ------------------- | ------------------ | ------------------------------ |
+| `update:modelValue` | `string \| number` | Al elegir un item con `value`. |
+| `select`            | `SidebarItem`      | Al pulsar cualquier item.      |
+
+| Slot     | Props              | Descripción                           |
+| -------- | ------------------ | ------------------------------------- |
+| `icon`   | `{ item, active }` | Icono a la izquierda de cada item.    |
+| `header` | —                  | Sustituye al `title`.                 |
+| `footer` | `{ collapsed }`    | Zona inferior (p. ej. botón de raíl). |
+
+## `Table`
+
+Tabla con ordenación, estados de carga y vacío, y celdas/encabezados personalizables por
+slot.
+
+```vue
+<template>
+  <Table
+    v-model:sort="sort"
+    :columns="[
+      { key: 'name', label: 'Nombre', sortable: true },
+      { key: 'score', label: 'Puntos', sortable: true, align: 'right' },
+    ]"
+    :rows="rows"
+    row-key="id"
+    striped
+    hoverable
+    @row-click="open"
+  >
+    <template #cell-score="{ value }">
+      <strong>{{ value }}</strong>
+    </template>
+  </Table>
+</template>
+```
+
+| Prop           | Tipo                                      | Default       | Descripción                                   |
+| -------------- | ----------------------------------------- | ------------- | --------------------------------------------- |
+| `columns`      | `TableColumn[]`                           | `[]`          | `{ key; label?; align?; width?; sortable? }`. |
+| `rows`         | `Record<string, unknown>[]`               | `[]`          | Datos.                                        |
+| `rowKey`       | `string \| (row, i) => string \| number`  | `'id'`        | Campo o función para la `key` de fila.        |
+| `sort`         | `{ key; order: 'asc' \| 'desc' } \| null` | `null`        | Orden actual (`v-model:sort`).                |
+| `manualSort`   | `boolean`                                 | `false`       | No ordenar internamente (lo hace el padre).   |
+| `loading`      | `boolean`                                 | `false`       | Pinta filas skeleton.                         |
+| `loadingRows`  | `number`                                  | `4`           | Nº de filas skeleton.                         |
+| `emptyText`    | `string`                                  | `'Sin datos'` | Texto cuando no hay filas.                    |
+| `size`         | `'sm' \| 'md' \| 'lg'`                    | `'md'`        | Densidad.                                     |
+| `striped`      | `boolean`                                 | `false`       | Filas alternas con fondo.                     |
+| `hoverable`    | `boolean`                                 | `false`       | Resalta la fila al pasar el ratón.            |
+| `stickyHeader` | `boolean`                                 | `false`       | Cabecera fija con scroll vertical.            |
+
+Al pulsar un encabezado `sortable` se cicla `asc → desc → sin orden` y se emite
+`update:sort`; el `<th>` refleja `aria-sort`. Sin `manualSort`, la tabla reordena las filas
+por sí misma (números y texto).
+
+| Evento        | Payload             | Descripción                |
+| ------------- | ------------------- | -------------------------- |
+| `update:sort` | `TableSort \| null` | Al cambiar la ordenación.  |
+| `row-click`   | `(row, index)`      | Al hacer clic en una fila. |
+
+| Slot           | Props                           | Descripción                 |
+| -------------- | ------------------------------- | --------------------------- |
+| `cell-<key>`   | `{ row, value, column, index }` | Contenido de una celda.     |
+| `header-<key>` | `{ column }`                    | Contenido de un encabezado. |
+| `empty`        | —                               | Sustituye al `emptyText`.   |
 
 ## Composables auxiliares
 

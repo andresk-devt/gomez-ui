@@ -22,6 +22,9 @@ import { Accordion } from './components/Accordion'
 import { Progress } from './components/Progress'
 import { Skeleton } from './components/Skeleton'
 import { Breadcrumb } from './components/Breadcrumb'
+import { Drawer } from './components/Drawer'
+import { Pagination } from './components/Pagination'
+import { ToastContainer } from './components/ToastContainer'
 
 export {
   Button,
@@ -47,9 +50,15 @@ export {
   Progress,
   Skeleton,
   Breadcrumb,
+  Drawer,
+  Pagination,
+  ToastContainer,
 }
 export { useColorMode } from './composables/useColorMode'
 export type { ColorMode, ResolvedColorMode } from './composables/useColorMode'
+export { useToast } from './composables/useToast'
+export { useScrollLock } from './composables/useScrollLock'
+export { useFocusTrap } from './composables/useFocusTrap'
 export type {
   Size,
   ButtonProps,
@@ -106,6 +115,14 @@ export type {
   SkeletonVariant,
   BreadcrumbProps,
   BreadcrumbItem,
+  DrawerProps,
+  DrawerSide,
+  PaginationProps,
+  ToastContainerProps,
+  ToastOptions,
+  ToastRecord,
+  ToastVariant,
+  ToastPlacement,
 } from './types'
 
 export interface GomezUIOptions {
@@ -143,6 +160,9 @@ const GomezUI: Plugin<[GomezUIOptions?]> = {
     app.component(`${prefix}Progress`, Progress)
     app.component(`${prefix}Skeleton`, Skeleton)
     app.component(`${prefix}Breadcrumb`, Breadcrumb)
+    app.component(`${prefix}Drawer`, Drawer)
+    app.component(`${prefix}Pagination`, Pagination)
+    app.component(`${prefix}ToastContainer`, ToastContainer)
   },
 }
 
